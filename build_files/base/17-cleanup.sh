@@ -8,20 +8,20 @@ echo "::group:: ===$(basename "$0")==="
 set -eoux pipefail
 
 # Setup Systemd — desktop-agnostic services
-systemctl --global enable podman-auto-update.timer
-systemctl --global enable ublue-user-setup.service
-systemctl enable brew-setup.service
-systemctl enable flatpak-nuke-fedora.service
-systemctl enable input-remapper.service
-systemctl enable rpm-ostree-countme.service
-systemctl enable tailscaled.service
-systemctl enable ublue-system-setup.service
+systemctl --global enable podman-auto-update.timer || true
+systemctl --global enable ublue-user-setup.service || true
+systemctl enable brew-setup.service || true
+systemctl enable flatpak-nuke-fedora.service || true
+systemctl enable input-remapper.service || true
+systemctl enable rpm-ostree-countme.service || true
+systemctl enable tailscaled.service || true
+systemctl enable ublue-system-setup.service || true
 # NOTE: dconf-update.service NOT enabled — COSMIC desktop, not GNOME
 
-systemctl enable flatpak-preinstall.service
+systemctl enable flatpak-preinstall.service || true
 
 # Updater
-systemctl enable uupd.timer
+systemctl enable uupd.timer || true
 
 # disable the old rpm-ostreed-automatic.timer
 systemctl disable rpm-ostreed-automatic.timer
