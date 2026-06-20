@@ -1,2 +1,3 @@
 # Plugin installation artifacts
 .copilot/plugins/*/.git/
+cosign.key
