@@ -115,5 +115,6 @@
 ## Status
 
 - Last audit: 2026-06-20
-- Constraints enforced: 2/7 (2 agent; 2 deterministic tools missing; 3 unverified)
+- Constraints enforced: 4/7 (2 deterministic now operational, 2 agent, 3 unverified)
 - Garbage collection active: 2/2
+- Tools: shellcheck ✅, gitleaks ✅, yamllint ✅, markdownlint-cli2 ✅
