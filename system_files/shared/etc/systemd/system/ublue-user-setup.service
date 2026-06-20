@@ -1,0 +1,10 @@
+[Unit]
+Description=UBlue user-level setup
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/ublue-os/user-setup
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Remove Fedora Flatpak repos and migrate to Flathub
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/ublue-os/flatpak-nuke-fedora
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

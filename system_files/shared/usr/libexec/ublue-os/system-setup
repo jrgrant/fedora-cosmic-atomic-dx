@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+# ublue-system-setup — Placeholder for ublue system-level setup
+echo "ublue-system-setup: no-op"

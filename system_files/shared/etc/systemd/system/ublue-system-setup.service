@@ -1,0 +1,11 @@
+[Unit]
+Description=UBlue system-level setup
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/ublue-os/system-setup
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

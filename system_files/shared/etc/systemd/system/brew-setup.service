@@ -1,0 +1,12 @@
+[Unit]
+Description=Homebrew first-run setup
+After=network.target
+ConditionPathExists=!/var/home/linuxbrew/.linuxbrew/.setup-complete
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/ublue-os/brew-setup
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

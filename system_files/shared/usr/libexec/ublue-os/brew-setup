@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+# brew-setup — Homebrew first-run installer
+# Invoked by brew-setup.service at first boot.
+set -euo pipefail
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || true
+touch /var/home/linuxbrew/.linuxbrew/.setup-complete
