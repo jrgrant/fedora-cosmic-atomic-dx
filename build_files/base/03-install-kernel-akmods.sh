@@ -34,8 +34,10 @@ dnf5 -y install \
 
 dnf5 versionlock add kernel kernel-devel kernel-devel-matched kernel-core kernel-modules kernel-modules-core kernel-modules-extra
 
-# Enable akmods repo
-sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/_copr_ublue-os-akmods.repo
+# Enable akmods repo (may not exist — kernel was installed from local RPMs)
+if [ -f /etc/yum.repos.d/_copr_ublue-os-akmods.repo ]; then
+    sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/_copr_ublue-os-akmods.repo
+fi
 
 # RPMFusion-dependent AKMODS (v4l2loopback)
 dnf5 -y install \
