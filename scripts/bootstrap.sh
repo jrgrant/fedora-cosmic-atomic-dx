@@ -51,27 +51,9 @@ done
 echo ""
 
 # ---- Justfiles ----
-echo "--- Justfiles ---"
-JUSTFILE_DIR="${HOME}/.just"
-JUSTFILE_REPO="https://raw.githubusercontent.com/ublue-os/bluefin/main/justfiles"
-
-mkdir -p "$JUSTFILE_DIR"
-
-justfiles=(
-    bluefin.just
-    bluefin-apps.just
-    bluefin-cli.just
-    bluefin-system.just
-)
-
-for jf in "${justfiles[@]}"; do
-    if [ -f "$JUSTFILE_DIR/$jf" ]; then
-        echo "  [skip] $jf (already exists)"
-    else
-        echo "  [fetch] $jf"
-        curl -fsSL "$JUSTFILE_REPO/$jf" -o "$JUSTFILE_DIR/$jf"
-    fi
-done
+echo "--- Just recipes ---"
+echo "  [skip] Use 'ujust' — Bluefin recipes are built into the image"
+echo "  Run 'ujust --list' to see available commands"
 
 echo ""
 
