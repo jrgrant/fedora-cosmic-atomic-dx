@@ -23,8 +23,8 @@ cat > /usr/share/ublue-os/image-info.json <<EOF
 }
 EOF
 
-# Rewrite os-release
-sed -i "s|^ID=.*|ID=atomic-cosmic|" /usr/lib/os-release
+# Rewrite os-release — keep ID=fedora for dnf/COPR chroot resolution
 sed -i "s|^PRETTY_NAME=.*|PRETTY_NAME=\"${IMAGE_PRETTY_NAME}\"|" /usr/lib/os-release
 sed -i "s|^NAME=.*|NAME=\"${IMAGE_PRETTY_NAME}\"|" /usr/lib/os-release
 sed -i "s|^VERSION_ID=.*|VERSION_ID=${FEDORA_MAJOR_VERSION}|" /usr/lib/os-release
+# Do NOT change ID — must stay "fedora" for dnf5 COPR chroot resolution
