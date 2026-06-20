@@ -84,6 +84,13 @@ compiled language or build system.
 - **Markdown**: validate with `markdownlint-cli2`
 - **JSON**: validate with `python3 -c "import json; ..."`
 
+## Conventions (extracted 2026-06-20)
+
+- **Containerisation heuristic for script/module design**: apply the same
+  tests that make a good container — single concern, minimal surface area,
+  reproducible from source, well-defined entrypoint, no sprawl. If a module
+  would make a bad container, it's likely over-engineered.
+
 ## Learnings
 
 <!-- Patterns, gotchas, and decisions accumulate here as the project progresses.
