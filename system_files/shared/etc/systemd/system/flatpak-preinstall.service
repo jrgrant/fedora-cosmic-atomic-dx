@@ -1,0 +1,10 @@
+[Unit]
+Description=Preinstall Flathub applications
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/ublue-os/flatpak-preinstall
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

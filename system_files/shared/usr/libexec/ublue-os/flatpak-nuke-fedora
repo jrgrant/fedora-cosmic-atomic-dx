@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+# flatpak-nuke-fedora — Remove Fedora Flatpak remote
+set -euo pipefail
+flatpak remote-delete --system fedora 2>/dev/null || true
+flatpak remote-add --system --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo

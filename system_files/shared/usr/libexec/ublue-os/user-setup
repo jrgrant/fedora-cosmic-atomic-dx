@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+# ublue-user-setup — Placeholder for ublue user-level setup
+echo "ublue-user-setup: no-op"
