@@ -1,11 +1,12 @@
 name: Build and Publish atomic-cosmic
 
 on:
-  schedule:
-    - cron: '0 6 * * *'  # Daily at 06:00 UTC
+  # TODO: re-enable schedule + push when local build passes
+  # schedule:
+  #   - cron: '0 6 * * *'
   workflow_dispatch:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   pull_request:
     branches: [main]
 
