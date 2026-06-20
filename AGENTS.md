@@ -19,6 +19,14 @@
 <!-- Traps, surprises, and non-obvious constraints. Initially empty — entries
      accumulate as the pipeline discovers them. -->
 
+- **FCA base ≠ Silverblue**: The FCA base image lacks directories and service
+  units present in UBlue/Bluefin's Silverblue-derived base. Always:
+  - Guard `systemctl enable` with `|| true` — services may not exist
+  - `mkdir -p` before writing to `/usr/share/ublue-os/`
+  - Never change `ID` in `os-release` — it must stay `fedora` for dnf5 COPR
+    chroot resolution
+  - The `_copr_ublue-os-akmods.repo` file may not exist — guard any sed on it
+
 ## ARCH_DECISIONS
 
 - **Decision**: Use git submodules for reference repos (m2os, ublue, bluefin, fca) rather than in-tree copies.
