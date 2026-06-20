@@ -2,8 +2,8 @@ ARG BASE_IMAGE="quay.io/fedora-ostree-desktops/cosmic-atomic"
 ARG FEDORA_MAJOR_VERSION="44"
 ARG BREW_IMAGE="ghcr.io/ublue-os/brew:latest"
 ARG BREW_IMAGE_SHA=""
-
-FROM ${BREW_IMAGE}@${BREW_IMAGE_SHA} AS brew
+# Digest pin when CI provides SHA; falls back to tag for local builds
+FROM ${BREW_IMAGE} AS brew
 FROM scratch AS ctx
 COPY /system_files /system_files
 COPY /build_files /build_files
