@@ -22,54 +22,49 @@ echo "    State file: $STATE_FILE"
 echo "    Backup dir: $BACKUP_DIR"
 echo ""
 
-# ---- bootc/rpm-ostree status ----
+# ---- Deployment status ----
 echo "--- Deployment status ---" > "$STATE_FILE"
 echo "Date: $(date -Iseconds)" >> "$STATE_FILE"
+CURRENT_IMAGE="unknown"
 
-if command -v bootc &>/dev/null; then
-    echo "" >> "$STATE_FILE"
-    echo "### bootc status" >> "$STATE_FILE"
-    bootc status 2>&1 | tee -a "$STATE_FILE"
-
-    # Capture the current booted image reference
-    CURRENT_IMAGE=$(bootc status --json 2>/dev/null | python3 -c "
-import json, sys
-d = json.load(sys.stdin)
-try:
-    booted = d.get('status', {}).get('booted', {})
-    image = booted.get('image', {}).get('image', '') or booted.get('cached_update', {}).get('image', {}).get('image', '')
-    if not image:
-        image = 'unknown'
-    print(image)
-except: print('unknown')
-" 2>/dev/null || echo "unknown")
-
-    echo ""
-    echo "    Current booted image: $CURRENT_IMAGE"
-
-elif command -v rpm-ostree &>/dev/null; then
-    echo "" >> "$STATE_FILE"
+# Try rpm-ostree first (works without root on most systems)
+if command -v rpm-ostree &>/dev/null; then
     echo "### rpm-ostree status" >> "$STATE_FILE"
-    rpm-ostree status 2>&1 | tee -a "$STATE_FILE"
+    rpm-ostree status 2>&1 | tee -a "$STATE_FILE" || true
 
     CURRENT_IMAGE=$(rpm-ostree status --json 2>/dev/null | python3 -c "
 import json, sys
-d = json.load(sys.stdin)
-try:
-    deployments = d.get('deployments', [])
-    for dep in deployments:
+def get_origin():
+    d = json.load(sys.stdin)
+    for dep in d.get('deployments', []):
         if dep.get('booted'):
-            origin = dep.get('origin', '')
-            print(origin)
-            break
-except: print('unknown')
+            return dep.get('origin', '') or 'unknown'
+    return 'unknown'
+print(get_origin())
 " 2>/dev/null || echo "unknown")
 
-    echo ""
-    echo "    Current origin: $CURRENT_IMAGE"
-else
-    echo "    WARNING: neither bootc nor rpm-ostree found — can't capture deployment"
+# Fall back to bootc (needs sudo)
+elif command -v bootc &>/dev/null; then
+    echo "### bootc status" >> "$STATE_FILE"
+    sudo bootc status 2>&1 | tee -a "$STATE_FILE" || {
+        echo "(bootc status requires root — skipping)" | tee -a "$STATE_FILE"
+    }
+
+    CURRENT_IMAGE=$(sudo bootc status --json 2>/dev/null | python3 -c "
+import json, sys
+def get_image():
+    d = json.load(sys.stdin)
+    booted = d.get('status', {}).get('booted', {})
+    return booted.get('image', {}).get('image', '') or 'unknown'
+print(get_image())
+" 2>/dev/null || echo "unknown")
+
 fi
+
+echo "" >> "$STATE_FILE"
+echo "Current image: $CURRENT_IMAGE" >> "$STATE_FILE"
+echo ""
+echo "    Current origin: $CURRENT_IMAGE"
 
 # ---- Layered packages ----
 echo "" >> "$STATE_FILE"
@@ -115,15 +110,9 @@ echo ""
 echo "  To roll back after a bad rebase:"
 echo ""
 if [ "$CURRENT_IMAGE" != "unknown" ]; then
-    echo "    bootc switch '$CURRENT_IMAGE'"
-    echo ""
-    echo "    # or for rpm-ostree systems:"
-    echo "    # rpm-ostree rebase '$CURRENT_IMAGE'"
+    echo "    rpm-ostree rebase '$CURRENT_IMAGE'"
 else
-    echo "    bootc rollback"
-    echo ""
-    echo "    # or for rpm-ostree systems:"
-    echo "    # rpm-ostree rollback"
+    echo "    rpm-ostree rollback"
 fi
 echo ""
 echo "  State file: $STATE_FILE"
