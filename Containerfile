@@ -21,8 +21,7 @@ ARG IMAGE_FLAVOR="dx"
 RUN --mount=type=cache,dst=/var/cache/libdnf5 \
     --mount=type=cache,dst=/var/cache/rpm-ostree \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
-    chmod +x /ctx/build_files/shared/build.sh && \
-    /ctx/build_files/shared/build.sh
+    bash /ctx/build_files/shared/build.sh
 
 CMD ["/sbin/init"]
 RUN bootc container lint
