@@ -9,6 +9,8 @@ set -eoux pipefail
 
 IMAGE_PRETTY_NAME="Atomic COSMIC DX"
 
+mkdir -p /usr/share/ublue-os
+
 cat > /usr/share/ublue-os/image-info.json <<EOF
 {
   "image-name": "${IMAGE_NAME}",
