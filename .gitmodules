@@ -1,0 +1,12 @@
+[submodule "m2os"]
+	path = m2os
+	url = https://github.com/m2Giles/m2os.git
+[submodule "ublue"]
+	path = ublue
+	url = https://github.com/ublue-os/main.git
+[submodule "bluefin"]
+	path = bluefin
+	url = https://github.com/ublue-os/bluefin.git
+[submodule "fca"]
+	path = fca
+	url = https://forge.fedoraproject.org/atomic-desktops/config.git
