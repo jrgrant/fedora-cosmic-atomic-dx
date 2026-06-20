@@ -1,5 +1,5 @@
 ARG BASE_IMAGE="quay.io/fedora-ostree-desktops/cosmic-atomic"
-ARG FEDORA_MAJOR_VERSION="43"
+ARG FEDORA_MAJOR_VERSION="44"
 ARG BREW_IMAGE="ghcr.io/ublue-os/brew:latest"
 ARG BREW_IMAGE_SHA=""
 # Digest pin when CI provides SHA; falls back to tag for local builds
@@ -11,7 +11,7 @@ COPY --from=brew /system_files /system_files/shared
 
 FROM ${BASE_IMAGE}:${FEDORA_MAJOR_VERSION}
 ARG AKMODS_FLAVOR="coreos-stable"
-ARG FEDORA_MAJOR_VERSION="43"
+ARG FEDORA_MAJOR_VERSION="44"
 ARG IMAGE_NAME="atomic-cosmic"
 ARG IMAGE_VENDOR="jrgrant"
 ARG SHA_HEAD_SHORT="unknown"
