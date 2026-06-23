@@ -97,6 +97,17 @@ gpgkey=https://dl.google.com/linux/linux_signing_key.pub
 EOF
 dnf -y install google-chrome-stable
 
+# Brave Browser (native RPM, auto-updating via writable /opt)
+tee /etc/yum.repos.d/brave-browser.repo <<'EOF'
+[brave-browser]
+name=Brave Browser
+baseurl=https://brave-browser-rpm-release.s3.brave.com/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://brave-browser-rpm-release.s3.brave.com/brave-browser-archive-keyring.gpg
+EOF
+dnf -y install brave-browser
+
 # Tailscale
 dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 dnf config-manager setopt tailscale-stable.enabled=0

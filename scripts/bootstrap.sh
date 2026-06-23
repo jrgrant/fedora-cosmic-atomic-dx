@@ -51,9 +51,9 @@ done
 echo ""
 # ---- Browsers (native RPMs — no Flatpak sandbox) ----
 echo "--- Browsers ---"
-echo "  google-chrome-stable: in image (native RPM from Google repo)"
-echo "  firefox: in image (native RPM from Fedora)"
-echo "  brave-browser: brew cask is macOS-only — install via RPM if needed"
+echo "  google-chrome-stable: in image (native RPM, auto-updating)"
+echo "  brave-browser: in image (native RPM, auto-updating)"
+echo "  firefox: in image (native Fedora RPM)"
 
 echo ""
 # ---- Justfiles ----
