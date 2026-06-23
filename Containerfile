@@ -12,7 +12,7 @@ COPY --from=brew /system_files /system_files/shared
 FROM ${BASE_IMAGE}:${FEDORA_MAJOR_VERSION}
 ARG AKMODS_FLAVOR="coreos-stable"
 ARG FEDORA_MAJOR_VERSION="44"
-ARG IMAGE_NAME="atomic-cosmic"
+ARG IMAGE_NAME="fedora-cosmic-atomic-dx-nvidia"
 ARG IMAGE_VENDOR="jrgrant"
 ARG SHA_HEAD_SHORT="unknown"
 ARG UBLUE_IMAGE_TAG="stable"

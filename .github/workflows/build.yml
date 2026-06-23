@@ -11,7 +11,7 @@ on:
     branches: [main]
 
 env:
-  IMAGE_NAME: fedora-cosmic-atomic-dx
+  IMAGE_NAME: fedora-cosmic-atomic-dx-nvidia
   REGISTRY: ghcr.io
   FEDORA_VERSION: "44"
 
