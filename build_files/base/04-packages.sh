@@ -66,6 +66,7 @@ FEDORA_PACKAGES=(
     samba-ldb-ldap-modules
     samba-winbind-clients
     samba-winbind-modules
+    seahorse
     setools-console
     sssd-nfs-idmap
     switcheroo-control
