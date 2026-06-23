@@ -49,7 +49,24 @@ for pkg in "${brew_packages[@]}"; do
 done
 
 echo ""
+# ---- Browsers (brew casks — native, no Flatpak sandbox, auto-updating) ----
+echo "--- Browsers ---"
+brew_casks=(
+    google-chrome
+    brave-browser
+    firefox
+)
 
+for cask in "${brew_casks[@]}"; do
+    if brew list --cask "$cask" &>/dev/null; then
+        echo "  [skip] brew install --cask $cask (already installed)"
+    else
+        echo "  [install] brew install --cask $cask"
+        brew install --cask "$cask"
+    fi
+done
+
+echo ""
 # ---- Justfiles ----
 echo "--- Just recipes ---"
 echo "  [skip] Use 'ujust' — Bluefin recipes are built into the image"
