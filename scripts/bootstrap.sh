@@ -49,22 +49,11 @@ for pkg in "${brew_packages[@]}"; do
 done
 
 echo ""
-# ---- Browsers (brew casks — native, no Flatpak sandbox, auto-updating) ----
+# ---- Browsers (native RPMs — no Flatpak sandbox) ----
 echo "--- Browsers ---"
-brew_casks=(
-    google-chrome
-    brave-browser
-    firefox
-)
-
-for cask in "${brew_casks[@]}"; do
-    if brew list --cask "$cask" &>/dev/null; then
-        echo "  [skip] brew install --cask $cask (already installed)"
-    else
-        echo "  [install] brew install --cask $cask"
-        brew install --cask "$cask"
-    fi
-done
+echo "  google-chrome-stable: in image (native RPM from Google repo)"
+echo "  firefox: in image (native RPM from Fedora)"
+echo "  brave-browser: brew cask is macOS-only — install via RPM if needed"
 
 echo ""
 # ---- Justfiles ----
