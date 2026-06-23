@@ -24,9 +24,4 @@ RUN --mount=type=cache,dst=/var/cache/libdnf5 \
     bash /ctx/build_files/shared/build.sh
 
 CMD ["/sbin/init"]
-
-# Makes /opt writeable — allows Chrome and other apps to self-update
-# between image rebuilds (matches Bluefin's pattern)
-RUN rm -rf /opt && ln -s /var/opt /opt
-
 RUN bootc container lint
