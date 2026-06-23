@@ -2,7 +2,7 @@
 # Run `just` or `just --list` to see available commands
 
 image := "fedora-cosmic-atomic-dx-nvidia"
-tag := "latest"
+tag := "44"
 full_image := "localhost/" + image + ":" + tag
 
 # Build the OCI image locally
