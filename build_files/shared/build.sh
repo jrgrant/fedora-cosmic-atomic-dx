@@ -9,12 +9,6 @@ set -eoux pipefail
 
 echo "::group:: Copy Files"
 
-# Makes /opt writeable before any package installs touch it
-if [ ! -L /opt ]; then
-    mkdir -p /var/opt
-    mv /opt/* /var/opt/ 2>/dev/null || true
-    rm -rf /opt && ln -s /var/opt /opt
-fi
 
 # Speeds up local builds
 dnf config-manager setopt keepcache=1
