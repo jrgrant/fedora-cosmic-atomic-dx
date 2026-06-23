@@ -117,7 +117,7 @@ dnf -y install --enablerepo='tailscale-stable' tailscale
 copr_install_isolated "che/nerd-fonts" "nerd-fonts"
 
 # uupd from ublue-os COPR
-copr_install_isolated "ublue-os/packages" "uupd"
+copr_install_isolated "ublue-os/packages" "uupd" "ublue-os-just"
 
 # Packages to exclude — GNOME-specific and unwanted
 EXCLUDED_PACKAGES=(
