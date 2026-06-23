@@ -25,14 +25,20 @@ sudo podman system prune -af 2>/dev/null || true
 
 echo ""
 echo "==> Building ${FULL_IMAGE}"
-podman build --no-cache -t "${IMAGE}:${TAG}" .
 
-echo ""
-echo "==> Verifying image"
-podman image exists "${IMAGE}:${TAG}" || {
-    echo "ERROR: Build failed — image not found"
+BUILD_LOG="/tmp/fedora-cosmic-atomic-dx-build.log"
+if podman build --no-cache -t "${IMAGE}:${TAG}" . > "$BUILD_LOG" 2>&1; then
+    echo "  Build OK"
+else
+    echo ""
+    echo "==> BUILD FAILED"
+    echo ""
+    grep -i 'error\|Error\|fail' "$BUILD_LOG" | grep -v 'level=error\|time=' | tail -10
+    echo ""
+    echo "Full log: $BUILD_LOG"
     exit 1
-}
+fi
+
 echo "  Image: $(podman images --format '{{.ID}}' "${IMAGE}:${TAG}" | head -1)"
 
 echo ""
