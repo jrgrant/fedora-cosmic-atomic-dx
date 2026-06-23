@@ -11,7 +11,7 @@ on:
     branches: [main]
 
 env:
-  IMAGE_NAME: atomic-cosmic
+  IMAGE_NAME: fedora-cosmic-atomic-dx
   REGISTRY: ghcr.io
   FEDORA_VERSION: "44"
 

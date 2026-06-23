@@ -15,7 +15,7 @@ if [[ "${1:-}" == "--rebase" ]]; then
     REBASE=true
 fi
 
-IMAGE="atomic-cosmic"
+IMAGE="fedora-cosmic-atomic-dx"
 TAG="latest"
 FULL_IMAGE="localhost/${IMAGE}:${TAG}"
 
