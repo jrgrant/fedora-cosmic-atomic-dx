@@ -88,17 +88,12 @@ dnf -y install --enablerepo=docker-ce-stable \
     docker-compose-plugin \
     docker-model-plugin
 
-# Visual Studio Code
-tee /etc/yum.repos.d/vscode.repo <<'EOF'
-[code]
-name=Visual Studio Code
-baseurl=https://packages.microsoft.com/yumrepos/vscode
-enabled=1
-gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc
-EOF
-sed -i "s/enabled=.*/enabled=0/g" /etc/yum.repos.d/vscode.repo
-dnf -y install --enablerepo=code \
-    code
-
+# Visual Studio Code (self-updating /opt install)
+echo "::group:: Installing VS Code to /opt"
+VSCODE_URL="https://code.visualstudio.com/sha/download?build=stable&os=linux-x64"
+curl -fsSL "$VSCODE_URL" -o /tmp/vscode.tar.gz
+mkdir -p /opt/vscode
+tar -xzf /tmp/vscode.tar.gz -C /opt/vscode --strip-components=1
+ln -sf /opt/vscode/bin/code /usr/local/bin/code
+rm -f /tmp/vscode.tar.gz /etc/yum.repos.d/vscode.repo 2>/dev/null || true
 echo "::endgroup::"
