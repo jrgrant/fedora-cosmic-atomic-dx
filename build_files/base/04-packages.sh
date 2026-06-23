@@ -95,6 +95,7 @@ enabled=1
 gpgcheck=1
 gpgkey=https://dl.google.com/linux/linux_signing_key.pub
 EOF
+mkdir -p /opt/google/chrome
 dnf -y install google-chrome-stable
 
 # Brave Browser (native RPM, auto-updating via writable /opt)
@@ -106,6 +107,7 @@ enabled=1
 gpgcheck=1
 gpgkey=https://brave-browser-rpm-release.s3.brave.com/brave-browser-archive-keyring.gpg
 EOF
+mkdir -p /opt/brave.com/brave
 dnf -y install brave-browser
 
 # Tailscale
