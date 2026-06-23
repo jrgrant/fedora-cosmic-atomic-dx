@@ -11,6 +11,7 @@ echo "::group:: Copy Files"
 
 # Makes /opt writeable before any package installs touch it
 if [ ! -L /opt ]; then
+    mkdir -p /var/opt
     mv /opt/* /var/opt/ 2>/dev/null || true
     rmdir /opt && ln -s /var/opt /opt
 fi
