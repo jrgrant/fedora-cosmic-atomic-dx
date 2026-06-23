@@ -13,7 +13,7 @@ echo "::group:: Copy Files"
 if [ ! -L /opt ]; then
     mkdir -p /var/opt
     mv /opt/* /var/opt/ 2>/dev/null || true
-    rmdir /opt && ln -s /var/opt /opt
+    rm -rf /opt && ln -s /var/opt /opt
 fi
 
 # Speeds up local builds
