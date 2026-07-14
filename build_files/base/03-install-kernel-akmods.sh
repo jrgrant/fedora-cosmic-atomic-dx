@@ -56,7 +56,7 @@ if [[ "${IMAGE_NAME}" =~ nvidia ]]; then
     mv /tmp/rpms/* /tmp/akmods-rpms/
 
     # Install NVIDIA RPMs
-    IMAGE_NAME="${BASE_IMAGE_NAME}" AKMODNV_PATH="/tmp/akmods-rpms" MULTILIB=0 /tmp/akmods-rpms/ublue-os/nvidia-install.sh
+    IMAGE_NAME="${IMAGE_NAME:-fedora-cosmic-atomic-dx-nvidia}" AKMODNV_PATH="/tmp/akmods-rpms" MULTILIB=0 /tmp/akmods-rpms/ublue-os/nvidia-install.sh
 
     # Blacklist nouveau
     tee /usr/lib/bootc/kargs.d/00-nvidia.toml <<KEOF
