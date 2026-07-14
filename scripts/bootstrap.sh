@@ -7,4 +7,4 @@
 # Usage: ujust bootstrap
 
 echo "==> Delegating to ujust bootstrap..."
-ujust bootstrap
+exec ujust bootstrap

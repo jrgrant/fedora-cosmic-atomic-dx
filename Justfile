@@ -28,7 +28,7 @@ test-build: build
 test-all: test test-build
 
 # Run the bootstrap script (post-install user setup)
-bootstrap:
+setup:
     bash scripts/bootstrap.sh
 
 # Prune podman storage

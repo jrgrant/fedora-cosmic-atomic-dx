@@ -27,6 +27,29 @@
     chroot resolution
   - The `_copr_ublue-os-akmods.repo` file may not exist — guard any sed on it
 
+- **ujust justfile path**: `ujust` runs `just --justfile /usr/share/ublue-os/justfile`,
+  which imports from `/usr/share/ublue-os/just/`. Custom recipes go in
+  `/usr/share/ublue-os/just/60-custom.just` (imported with `import?` — optional).
+  The directory is `just/`, not `justfiles/`.
+
+- **ujust recipe name collisions**: Upstream recipes are in `/usr/share/ublue-os/just/`.
+  `allow-duplicate-recipes` is set — last import wins silently. Check for collisions
+  before naming custom recipes. Prefer namespaced names (e.g. `rebase-helper`, not
+  `update`).
+
+- **Circular delegation trap**: A Justfile target that delegates to a ujust recipe
+  must use a different name. `just bootstrap` → `ujust bootstrap` loops if `ujust`
+  resolves through `just` and finds the local `Justfile`. Name the Justfile target
+  differently (e.g. `setup`).
+
+- **Atomic filesystem at runtime**: `/usr` is read-only on booted atomic systems.
+  Iterate on justfiles with `just --justfile <path>`, not by copying into `/usr`.
+  Changes require a rebuild to persist across reboots.
+
+- **[just] annotation syntax**: `[name]` lines before recipe definitions are not
+  valid just syntax unless `name` is a recognised attribute (`private`, `no-cd`,
+  etc.). Use `# comments` for section headers.
+
 ## ARCH_DECISIONS
 
 - **Decision**: Use git submodules for reference repos (m2os, ublue, bluefin, fca) rather than in-tree copies.
