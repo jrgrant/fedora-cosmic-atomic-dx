@@ -18,9 +18,6 @@ ARG SHA_HEAD_SHORT="unknown"
 ARG UBLUE_IMAGE_TAG="stable"
 ARG IMAGE_FLAVOR="dx"
 
-# Makes /opt writeable for self-updating apps (Bluefin pattern)
-RUN rm -rf /opt && ln -s /var/opt /opt
-
 RUN --mount=type=cache,dst=/var/cache/libdnf5 \
     --mount=type=cache,dst=/var/cache/rpm-ostree \
     --mount=type=bind,from=ctx,source=/,target=/ctx \

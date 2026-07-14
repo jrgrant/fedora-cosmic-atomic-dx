@@ -86,29 +86,27 @@ FEDORA_PACKAGES=(
 echo "Installing ${#FEDORA_PACKAGES[@]} packages from Fedora repos..."
 dnf -y install "${FEDORA_PACKAGES[@]}"
 
-# Google Chrome (native RPM, auto-updating via dnf)
-tee /etc/yum.repos.d/google-chrome.repo <<'EOF'
-[google-chrome]
-name=google-chrome
-baseurl=https://dl.google.com/linux/chrome/rpm/stable/x86_64
-enabled=1
-gpgcheck=1
-gpgkey=https://dl.google.com/linux/linux_signing_key.pub
-EOF
-mkdir -p /opt/google/chrome
-dnf -y install google-chrome-stable
+# ---- Browsers: /var/opt installs (writable, self-updating, survives rebases) ----
 
-# Brave Browser (native RPM, auto-updating via writable /opt)
-tee /etc/yum.repos.d/brave-browser.repo <<'EOF'
-[brave-browser]
-name=Brave Browser
-baseurl=https://brave-browser-rpm-release.s3.brave.com/$basearch
-enabled=1
-gpgcheck=1
-gpgkey=https://brave-browser-rpm-release.s3.brave.com/brave-browser-archive-keyring.gpg
-EOF
-mkdir -p /opt/brave.com/brave
-dnf -y install brave-browser
+# Google Chrome
+mkdir -p /var/opt/google/chrome
+dnf download --destdir=/tmp google-chrome-stable
+for rpm in /tmp/google-chrome-stable*.rpm; do
+    rpm2cpio "$rpm" | (cd /var/opt && cpio -idmv)
+done
+ln -sf /var/opt/opt/google/chrome/google-chrome /usr/local/bin/google-chrome
+ln -sf /var/opt/opt/google/chrome/google-chrome /usr/local/bin/google-chrome-stable
+rm -f /tmp/google-chrome-stable*.rpm
+
+# Brave Browser
+mkdir -p /var/opt/brave.com
+dnf download --destdir=/tmp --enablerepo=brave-browser brave-browser || \
+    curl -fsSL "https://github.com/brave/brave-browser/releases/latest/download/brave-browser-$(uname -m).rpm" -o /tmp/brave-browser.rpm
+for rpm in /tmp/brave-browser*.rpm; do
+    rpm2cpio "$rpm" | (cd /var/opt && cpio -idmv)
+done
+ln -sf /var/opt/opt/brave.com/brave/brave /usr/local/bin/brave-browser
+rm -f /tmp/brave-browser*.rpm
 
 # Tailscale
 dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
