@@ -36,6 +36,14 @@ bootstrap:
 
     echo ""
     echo "==> Bootstrap complete"
+    echo ""
+    echo "Post-rebase cleanup (optional):"
+    echo "  brew uninstall --cask visual-studio-code-linux 2>/dev/null"
+    echo "  flatpak uninstall com.google.Chrome 2>/dev/null"
+    echo "  flatpak uninstall com.brave.Browser 2>/dev/null"
+    echo ""
+    echo "Verify secrets persistence:"
+    echo "  Log into Chrome, reboot, check session survives"
 
 # Print system info
 [info]
@@ -45,9 +53,9 @@ info:
     echo "Kernel: $(uname -r)"
     echo "Podman: $(podman --version 2>/dev/null || echo 'not found')"
     echo "Docker: $(docker --version 2>/dev/null || echo 'not found')"
-    echo "VS Code: $(/opt/vscode/bin/code --version 2>/dev/null | head -1 || echo 'not found')"
-    echo "Chrome: $(/opt/google/chrome/google-chrome --version 2>/dev/null || echo 'not found')"
-    echo "Brave: $(/opt/brave.com/brave/brave --version 2>/dev/null || echo 'not found')"
+    echo "VS Code: $(/var/opt/vscode/bin/code --version 2>/dev/null | head -1 || echo 'not found')"
+    echo "Chrome: $(/var/opt/opt/google/chrome/google-chrome --version 2>/dev/null || echo 'not found')"
+    echo "Brave: $(/var/opt/opt/brave.com/brave/brave --version 2>/dev/null || echo 'not found')"
 
 # Update all self-updating apps
 [update]
