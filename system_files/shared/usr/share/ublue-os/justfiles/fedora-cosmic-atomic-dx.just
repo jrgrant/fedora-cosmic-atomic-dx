@@ -34,6 +34,45 @@ bootstrap:
         "
     fi
 
+    # ---- Browsers (user apps, ~/.opt, self-updating) ----
+    echo "--- Browsers ---"
+    mkdir -p ~/.opt ~/.local/bin
+
+    # Google Chrome
+    if [ ! -f ~/.opt/opt/google/chrome/google-chrome ]; then
+        echo "  [install] google-chrome to ~/.opt"
+        curl -fsSL "https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm" -o /tmp/chrome.rpm
+        rpm2cpio /tmp/chrome.rpm | (cd ~/.opt && cpio -idmv)
+        rm -f /tmp/chrome.rpm
+        ln -sf ~/.opt/opt/google/chrome/google-chrome ~/.local/bin/google-chrome
+    else
+        echo "  [skip] google-chrome already in ~/.opt"
+    fi
+
+    # Brave Browser
+    if [ ! -f ~/.opt/opt/brave.com/brave/brave ]; then
+        echo "  [install] brave-browser to ~/.opt"
+        curl -fsSL "https://github.com/brave/brave-browser/releases/latest/download/brave-browser-x86_64.rpm" -o /tmp/brave.rpm
+        rpm2cpio /tmp/brave.rpm | (cd ~/.opt && cpio -idmv)
+        rm -f /tmp/brave.rpm
+        ln -sf ~/.opt/opt/brave.com/brave/brave ~/.local/bin/brave-browser
+    else
+        echo "  [skip] brave-browser already in ~/.opt"
+    fi
+
+    # VS Code
+    if [ ! -f ~/.opt/VSCode-linux-x64/bin/code ]; then
+        echo "  [install] vscode to ~/.opt"
+        VSCODE_URL="https://code.visualstudio.com/sha/download?build=stable&os=linux-x64"
+        curl -fsSL "$VSCODE_URL" -o /tmp/vscode.tar.gz
+        mkdir -p ~/.opt
+        tar -xzf /tmp/vscode.tar.gz -C ~/.opt
+        rm -f /tmp/vscode.tar.gz
+        ln -sf ~/.opt/VSCode-linux-x64/bin/code ~/.local/bin/code
+    else
+        echo "  [skip] vscode already in ~/.opt"
+    fi
+
     echo ""
     echo "==> Bootstrap complete"
     echo ""
@@ -53,9 +92,9 @@ info:
     echo "Kernel: $(uname -r)"
     echo "Podman: $(podman --version 2>/dev/null || echo 'not found')"
     echo "Docker: $(docker --version 2>/dev/null || echo 'not found')"
-    echo "VS Code: $(/var/opt/vscode/bin/code --version 2>/dev/null | head -1 || echo 'not found')"
-    echo "Chrome: $(/var/opt/opt/google/chrome/google-chrome --version 2>/dev/null || echo 'not found')"
-    echo "Brave: $(/var/opt/opt/brave.com/brave/brave --version 2>/dev/null || echo 'not found')"
+    echo "VS Code: $(~/.local/bin/code --version 2>/dev/null | head -1 || echo 'not installed')"
+    echo "Chrome: $(~/.local/bin/google-chrome --version 2>/dev/null || echo 'not installed')"
+    echo "Brave: $(~/.local/bin/brave-browser --version 2>/dev/null || echo 'not installed')"
 
 # Update all self-updating apps
 [update]

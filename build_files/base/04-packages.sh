@@ -86,28 +86,6 @@ FEDORA_PACKAGES=(
 echo "Installing ${#FEDORA_PACKAGES[@]} packages from Fedora repos..."
 dnf -y install "${FEDORA_PACKAGES[@]}"
 
-# ---- Browsers: /var/opt installs (writable, self-updating, survives rebases) ----
-
-# Google Chrome
-mkdir -p /var/opt/google/chrome
-dnf download --destdir=/tmp google-chrome-stable
-for rpm in /tmp/google-chrome-stable*.rpm; do
-    rpm2cpio "$rpm" | (cd /var/opt && cpio -idmv)
-done
-ln -sf /var/opt/opt/google/chrome/google-chrome /usr/local/bin/google-chrome
-ln -sf /var/opt/opt/google/chrome/google-chrome /usr/local/bin/google-chrome-stable
-rm -f /tmp/google-chrome-stable*.rpm
-
-# Brave Browser
-mkdir -p /var/opt/brave.com
-dnf download --destdir=/tmp --enablerepo=brave-browser brave-browser || \
-    curl -fsSL "https://github.com/brave/brave-browser/releases/latest/download/brave-browser-$(uname -m).rpm" -o /tmp/brave-browser.rpm
-for rpm in /tmp/brave-browser*.rpm; do
-    rpm2cpio "$rpm" | (cd /var/opt && cpio -idmv)
-done
-ln -sf /var/opt/opt/brave.com/brave/brave /usr/local/bin/brave-browser
-rm -f /tmp/brave-browser*.rpm
-
 # Tailscale
 dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 dnf config-manager setopt tailscale-stable.enabled=0
