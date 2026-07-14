@@ -35,9 +35,6 @@ echo "::endgroup::"
 # Install Additional Packages
 /ctx/build_files/base/04-packages.sh
 
-# Install Overrides and Fetch Install
-/ctx/build_files/base/05-override-install.sh 2>/dev/null || true
-
 # NOTE: build-gnome-extensions.sh omitted — COSMIC desktop, not GNOME
 
 ## late stage changes
