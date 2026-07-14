@@ -88,12 +88,12 @@ dnf -y install --enablerepo=docker-ce-stable \
     docker-compose-plugin \
     docker-model-plugin
 
-# Visual Studio Code (self-updating /opt install)
-echo "::group:: Installing VS Code to /opt"
+# Visual Studio Code (self-updating /var/opt install)
+echo "::group:: Installing VS Code to /var/opt"
 VSCODE_URL="https://code.visualstudio.com/sha/download?build=stable&os=linux-x64"
 curl -fsSL "$VSCODE_URL" -o /tmp/vscode.tar.gz
-mkdir -p /opt/vscode
-tar -xzf /tmp/vscode.tar.gz -C /opt/vscode --strip-components=1
-ln -sf /opt/vscode/bin/code /usr/local/bin/code
-rm -f /tmp/vscode.tar.gz /etc/yum.repos.d/vscode.repo 2>/dev/null || true
+mkdir -p /var/opt/vscode
+tar -xzf /tmp/vscode.tar.gz -C /var/opt/vscode --strip-components=1
+ln -sf /var/opt/vscode/bin/code /usr/local/bin/code
+rm -f /tmp/vscode.tar.gz
 echo "::endgroup::"
