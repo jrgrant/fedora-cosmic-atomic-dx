@@ -47,4 +47,21 @@ dnf5 -y install \
     v4l2loopback /tmp/akmods/kmods/*v4l2loopback*.rpm
 dnf5 -y remove rpmfusion-free-release rpmfusion-nonfree-release
 
+# NVIDIA AKMODS (triggered by IMAGE_NAME containing "nvidia")
+if [[ "${IMAGE_NAME}" =~ nvidia ]]; then
+    # Fetch NVIDIA RPMs
+    skopeo copy --retry-times 3 docker://ghcr.io/ublue-os/akmods-nvidia-open:"${AKMODS_FLAVOR}"-"$(rpm -E %fedora)" dir:/tmp/akmods-rpms
+    NVIDIA_TARGZ=$(jq -r '.layers[].digest' </tmp/akmods-rpms/manifest.json | cut -d : -f 2)
+    tar -xvzf /tmp/akmods-rpms/"$NVIDIA_TARGZ" -C /tmp/
+    mv /tmp/rpms/* /tmp/akmods-rpms/
+
+    # Install NVIDIA RPMs
+    IMAGE_NAME="${BASE_IMAGE_NAME}" AKMODNV_PATH="/tmp/akmods-rpms" MULTILIB=0 /tmp/akmods-rpms/ublue-os/nvidia-install.sh
+
+    # Blacklist nouveau
+    tee /usr/lib/bootc/kargs.d/00-nvidia.toml <<KEOF
+kargs = ["rd.driver.blacklist=nouveau", "modprobe.blacklist=nouveau", "nvidia-drm.modeset=1", "initcall_blacklist=simpledrm_platform_driver_init"]
+KEOF
+fi
+
 echo "::endgroup::"
