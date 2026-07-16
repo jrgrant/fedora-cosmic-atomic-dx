@@ -65,7 +65,7 @@ bootstrap:
         echo "  [add] chrome desktop shortcut + icons"
         curl -fsSL "https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm" -o /tmp/chrome.rpm
         mkdir -p /tmp/chrome-extract && rpm2cpio /tmp/chrome.rpm | (cd /tmp/chrome-extract && cpio -idm 2>/dev/null)
-        sed "s|Exec=/usr/bin/google-chrome-stable|Exec=$HOME/.opt/google/chrome/google-chrome --password-store=gnome-libsecret|g" \
+        sed "s|Exec=/usr/bin/google-chrome-stable|Exec=$HOME/.opt/google/chrome/google-chrome --password-store=basic --no-first-run|g" \
             /tmp/chrome-extract/usr/share/applications/google-chrome.desktop \
             > ~/.local/share/applications/google-chrome.desktop
         # Install icons from app bundle (RPM doesn't ship them)
@@ -97,7 +97,7 @@ bootstrap:
         BRAVE_VER=$(curl -fsSL "https://api.github.com/repos/brave/brave-browser/releases/latest" | grep '"tag_name"' | cut -d'"' -f4 | sed 's/^v//')
         curl -fsSL "https://github.com/brave/brave-browser/releases/download/v${BRAVE_VER}/brave-browser-${BRAVE_VER}-1.x86_64.rpm" -o /tmp/brave.rpm
         mkdir -p /tmp/brave-extract && rpm2cpio /tmp/brave.rpm | (cd /tmp/brave-extract && cpio -idm 2>/dev/null)
-        sed "s|Exec=/usr/bin/brave-browser-stable|Exec=$HOME/.opt/brave.com/brave/brave --password-store=gnome-libsecret|g" \
+        sed "s|Exec=/usr/bin/brave-browser-stable|Exec=$HOME/.opt/brave.com/brave/brave --password-store=basic --no-first-run|g" \
             /tmp/brave-extract/usr/share/applications/brave-browser.desktop \
             > ~/.local/share/applications/brave-browser.desktop
         # Install icons from app bundle (RPM doesn't ship them)
