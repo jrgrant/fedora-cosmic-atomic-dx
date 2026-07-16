@@ -50,6 +50,18 @@
   valid just syntax unless `name` is a recognised attribute (`private`, `no-cd`,
   etc.). Use `# comments` for section headers.
 
+- **COSMIC keyring integration is broken upstream**: The XDG Desktop Portal secrets
+  backend (`gnome-keyring.portal`) has `UseIn=gnome` — excludes COSMIC. Chrome/Electron
+  apps use the portal API, not direct libsecret, so they silently fall back to basic
+  (non-persistent) storage. Fix: add `;COSMIC` to `UseIn=` in the portal file and
+  `OnlyShowIn=` in autostart files. Chrome 150+ needs `--password-store=gnome-libsecret`
+  (not `gnome`).
+
+- **VS Code install strategy**: Custom `~/.opt` tarball install adds complexity
+  (manual desktop files, icon extraction, `--no-sandbox` flags) without solving
+  credential persistence. Prefer `brew install --cask visual-studio-code-linux`.
+  See `docs/research/vscode-install-strategy.md`.
+
 ## ARCH_DECISIONS
 
 - **Decision**: Use git submodules for reference repos (m2os, ublue, bluefin, fca) rather than in-tree copies.
