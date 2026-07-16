@@ -6,6 +6,10 @@ bootstrap:
     echo "==> fedora-cosmic-atomic-dx bootstrap"
     echo ""
 
+    # Ensure WAYLAND_DISPLAY is in D-Bus activation env (cosmic-session#96)
+    systemctl --user enable --now cosmic-keyring-env.service 2>/dev/null || true
+    dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY 2>/dev/null || true
+
     # Brew taps and key packages
     echo "--- Homebrew ---"
     brew tap ublue-os/tap 2>/dev/null || true
