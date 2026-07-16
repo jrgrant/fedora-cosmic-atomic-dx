@@ -19,9 +19,13 @@ for f in /etc/xdg/autostart/gnome-keyring-{secrets,pkcs11,ssh}.desktop; do
     fi
 done
 
-# Fix 2: Portal — add COSMIC to UseIn
+# Fix 2: Portal — add COSMIC to UseIn (only if not already there from system_files overlay)
 PORTAL_FILE=/usr/share/xdg-desktop-portal/portals/gnome-keyring.portal
 if [ -f "$PORTAL_FILE" ]; then
-    sed -i 's/UseIn=gnome/UseIn=gnome;COSMIC/' "$PORTAL_FILE"
-    echo "Fixed: $PORTAL_FILE"
+    if ! grep -q "COSMIC" "$PORTAL_FILE"; then
+        sed -i 's/UseIn=gnome/UseIn=gnome;COSMIC/' "$PORTAL_FILE"
+        echo "Fixed: $PORTAL_FILE"
+    else
+        echo "Already fixed: $PORTAL_FILE"
+    fi
 fi
