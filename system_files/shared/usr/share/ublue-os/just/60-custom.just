@@ -51,6 +51,8 @@ bootstrap:
         cp -r /tmp/chrome-extract/opt/* ~/.opt/
         rm -rf /tmp/chrome.rpm /tmp/chrome-extract
         ln -sf ~/.opt/google/chrome/google-chrome ~/.local/bin/google-chrome
+        # Remove stale First Run sentinel (breaks session persistence on COSMIC)
+        rm -f ~/.config/google-chrome/First\ Run
     else
         echo "  [skip] google-chrome already in ~/.opt"
     fi
@@ -59,10 +61,15 @@ bootstrap:
         echo "  [add] chrome desktop shortcut + icons"
         curl -fsSL "https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm" -o /tmp/chrome.rpm
         mkdir -p /tmp/chrome-extract && rpm2cpio /tmp/chrome.rpm | (cd /tmp/chrome-extract && cpio -idm 2>/dev/null)
-        sed "s|Exec=/usr/bin/google-chrome-stable|Exec=$HOME/.opt/google/chrome/google-chrome|g" \
+        sed "s|Exec=/usr/bin/google-chrome-stable|Exec=$HOME/.opt/google/chrome/google-chrome --password-store=gnome-libsecret|g" \
             /tmp/chrome-extract/usr/share/applications/google-chrome.desktop \
             > ~/.local/share/applications/google-chrome.desktop
-        cp -r /tmp/chrome-extract/usr/share/icons/* ~/.local/share/icons/ 2>/dev/null || true
+        # Install icons from app bundle (RPM doesn't ship them)
+        for png in ~/.opt/google/chrome/product_logo_*.png; do
+            sz=$(basename "$png" | sed 's/product_logo_//; s/.png//')
+            mkdir -p ~/.local/share/icons/hicolor/${sz}x${sz}/apps
+            cp "$png" ~/.local/share/icons/hicolor/${sz}x${sz}/apps/google-chrome.png
+        done
         rm -rf /tmp/chrome.rpm /tmp/chrome-extract
     fi
 
@@ -75,6 +82,8 @@ bootstrap:
         cp -r /tmp/brave-extract/opt/* ~/.opt/
         rm -rf /tmp/brave.rpm /tmp/brave-extract
         ln -sf ~/.opt/brave.com/brave/brave ~/.local/bin/brave-browser
+        # Remove stale First Run sentinel (breaks session persistence on COSMIC)
+        rm -f ~/.config/BraveSoftware/Brave-Browser/First\ Run
     else
         echo "  [skip] brave-browser already in ~/.opt"
     fi
@@ -84,10 +93,15 @@ bootstrap:
         BRAVE_VER=$(curl -fsSL "https://api.github.com/repos/brave/brave-browser/releases/latest" | grep '"tag_name"' | cut -d'"' -f4 | sed 's/^v//')
         curl -fsSL "https://github.com/brave/brave-browser/releases/download/v${BRAVE_VER}/brave-browser-${BRAVE_VER}-1.x86_64.rpm" -o /tmp/brave.rpm
         mkdir -p /tmp/brave-extract && rpm2cpio /tmp/brave.rpm | (cd /tmp/brave-extract && cpio -idm 2>/dev/null)
-        sed "s|Exec=/usr/bin/brave-browser-stable|Exec=$HOME/.opt/brave.com/brave/brave|g" \
+        sed "s|Exec=/usr/bin/brave-browser-stable|Exec=$HOME/.opt/brave.com/brave/brave --password-store=gnome-libsecret|g" \
             /tmp/brave-extract/usr/share/applications/brave-browser.desktop \
             > ~/.local/share/applications/brave-browser.desktop
-        cp -r /tmp/brave-extract/usr/share/icons/* ~/.local/share/icons/ 2>/dev/null || true
+        # Install icons from app bundle (RPM doesn't ship them)
+        for png in ~/.opt/brave.com/brave/product_logo_*.png; do
+            sz=$(basename "$png" | sed 's/product_logo_//; s/.png//')
+            mkdir -p ~/.local/share/icons/hicolor/${sz}x${sz}/apps
+            cp "$png" ~/.local/share/icons/hicolor/${sz}x${sz}/apps/brave-browser.png
+        done
         rm -rf /tmp/brave.rpm /tmp/brave-extract
     fi
 
@@ -123,6 +137,9 @@ bootstrap:
 
     echo ""
     echo "==> Bootstrap complete"
+    echo ""
+    echo "CRITICAL: VS Code needs password-store set for COSMIC keyring:"
+    echo "  Add '\"password-store\": \"gnome\"' to ~/.config/Code/User/settings.json"
 
 # Print system info
 info:

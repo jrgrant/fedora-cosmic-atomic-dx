@@ -37,6 +37,12 @@ echo "::endgroup::"
 
 # NOTE: build-gnome-extensions.sh omitted — COSMIC desktop, not GNOME
 
+# Upgrade COSMIC from adil192 COPR (newer than Fedora 44 repos)
+/ctx/build_files/base/05-cosmic-upgrade.sh
+
+# Fix gnome-keyring autostart and portal for COSMIC
+/ctx/build_files/base/20-cosmic-keyring-fix.sh
+
 ## late stage changes
 
 # Systemd and Remove Items
