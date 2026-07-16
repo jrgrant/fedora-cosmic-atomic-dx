@@ -46,6 +46,11 @@
   Iterate on justfiles with `just --justfile <path>`, not by copying into `/usr`.
   Changes require a rebuild to persist across reboots.
 
+- **rpm-ostree rebase with fixed tags**: Rebuilding with the same `:tag` produces a
+  new manifest digest, but rpm-ostree resolves the tag to the booted manifest and
+  refuses rebase ("Old and new refs are equal"). Always rebase by explicit digest:
+  `rpm-ostree rebase ...:tag@sha256:$(sudo podman image inspect ... --format '{{.Digest}}')`
+
 - **[just] annotation syntax**: `[name]` lines before recipe definitions are not
   valid just syntax unless `name` is a recognised attribute (`private`, `no-cd`,
   etc.). Use `# comments` for section headers.
