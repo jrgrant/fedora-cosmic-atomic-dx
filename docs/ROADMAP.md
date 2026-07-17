@@ -29,11 +29,11 @@
 - [x] Build fixes: digest rebase, tailscale retry, `First Run` cleanup
 
 ## Phase 6 — Maintain & Upstream (current)
-1. [ ] Stable CI — re-enable scheduled builds
+1. [x] Stable CI — re-enable scheduled builds
 2. [ ] Boot tests — automate validation
 3. [ ] Watch F45 + oo7 — drop keyring patches when oo7 lands (~Oct 2026)
 4. [ ] Quarterly harness audit
-5. [ ] README with install instructions
+5. [x] README with install instructions
 
 ---
 
