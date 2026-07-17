@@ -1,101 +1,50 @@
 # Roadmap: FCA Developer Experience
 
-**Date**: 2026-06-20
+**Updated**: 2026-07-17
 **Target**: Fedora COSMIC Atomic + Bluefin developer tooling as a custom OCI image
 
 ---
 
-## Phase 0 — Foundation (current)
+## Phase 0 — Foundation ✅
+- [x] PROBLEM.md, submodules, harness, constraint tools, research
 
-- [x] PROBLEM.md — problem statement
-- [x] Reference repos as submodules (m2os, ublue-os/main, ublue-os/bluefin, fca)
-- [x] AI Literacy harness (CLAUDE.md, AGENTS.md, HARNESS.md, agents, CI scaffold)
-- [x] Constraint tools installed (shellcheck, gitleaks, yamllint, markdownlint-cli2)
-- [x] Research: Fedora Atomic ↔ UBlue compatibility
+## Phase 1 — Diff the Gap ✅
+- [x] Bluefin dx inventory, system_files audit, services audit, FCA baseline, COSMIC-specific needs
 
----
+## Phase 2 — Containerfile MVP ✅
+- [x] Containerfile, ported build scripts, Homebrew layer, Flathub, COSMIC 1.3.0 upgrade
+- [x] Keyring fixes: portal `UseIn=COSMIC`, autostart `OnlyShowIn=COSMIC`, D-Bus env
+- [x] akmods kernel + NVIDIA, local build passes
 
-## Phase 1 — Diff the Gap
+## Phase 3 — CI Pipeline ✅
+- [x] GitHub Actions workflow, smoke tests, container push
 
-Goal: know exactly what Bluefin dx has that FCA doesn't, and what we need to adapt.
+## Phase 4 — Bootstrap & Ujust ✅
+- [x] Homebrew taps, starship, distrobox, Flatpak user apps (Chrome/Brave/VSCode)
+- [x] `ujust bootstrap/info/rebase-helper/rollback`, `Justfile`
 
-1. **Map Bluefin's dx packages** — produce a clean list from `bluefin/build_files/dx/00-dx.sh` and `bluefin/build_files/base/04-packages.sh`, categorised by function (container, virtualisation, networking, shell, media, dev tooling)
-2. **Map Bluefin's system_files** — identify which are desktop-agnostic (Flathub setup, ublue-os configs, brew setup, dconf update) vs GNOME-specific (extensions, themes, gschema)
-3. **Map Bluefin's services** — which systemd units get enabled (`17-cleanup.sh`) and which apply to COSMIC
-4. **Identify FCA baseline** — what FCA already has (podman, buildah, skopeo, gnome-keyring-pam, firewalld) so we don't duplicate
-5. **Identify COSMIC-specific needs** — keyring/wallet persistence, any missing COSMIC packages we need
+## Phase 5 — Dogfood & Harden ✅
+- [x] Booted on own machine, all tools functional
+- [x] Session persistence working (Flatpak + basic store, no keyring needed)
+- [x] Build fixes: digest rebase, tailscale retry, `First Run` cleanup
 
-**Output**: `docs/research/bluefin-dx-inventory.md`
-
----
-
-## Phase 2 — Containerfile (MVP)
-
-Goal: a working Containerfile that builds a bootable FCA+Bluefin dx image.
-
-1. **Write Containerfile** — `FROM quay.io/fedora-ostree-desktops/cosmic-atomic:44`
-2. **Port Bluefin build scripts** — strip GNOME-only parts, keep desktop-agnostic additions
-3. **Layer Homebrew** — import `ghcr.io/ublue-os/brew` layer
-4. **Layer Flathub** — replace Fedora Flatpak remote, add `flatpak-nuke-fedora.service`
-5. **Enable services** — brew-setup, dconf-update, uupd.timer, tailscaled
-6. **Secrets hardening** — verify gnome-keyring-pam is wired correctly for COSMIC
-7. **Local build test** — `podman build .` and inspect
-
-**Output**: `Containerfile` + `build_files/` + `system_files/`
+## Phase 6 — Maintain & Upstream (current)
+1. [ ] Stable CI — re-enable scheduled builds
+2. [ ] Boot tests — automate validation
+3. [ ] Watch F45 + oo7 — drop keyring patches when oo7 lands (~Oct 2026)
+4. [ ] Quarterly harness audit
+5. [ ] README with install instructions
 
 ---
 
-## Phase 3 — CI Pipeline
+## Lessons Learned
 
-Goal: automated rebuilds when FCA publishes new images.
-
-1. **GitHub Actions workflow** — watches `quay.io/fedora-ostree-desktops/cosmic-atomic` for new tags
-2. **Build + push** — builds Containerfile, pushes to `ghcr.io/jrgrant/atomic-cosmic`
-3. **Smoke tests** — verify key packages present, systemd services enabled, bootc lint
-4. **Version tagging** — track FCA version (e.g. `:44`, `:44-20260620`, `:latest`)
-
-**Output**: `.github/workflows/build.yml`
-
----
-
-## Phase 4 — Bootstrap Script
-
-Goal: user-level setup that doesn't belong in the image.
-
-1. **Homebrew taps** — Bluefin's custom recipes
-2. **Justfiles** — `ujust` recipes from Bluefin
-3. **Starship init** — shell prompt configuration
-4. **Distrobox preset** — a curated dev container
-5. **Idempotent** — safe to re-run, survives reboots
-
-**Output**: `scripts/bootstrap.sh`
-
----
-
-## Phase 5 — Dogfood & Harden
-
-Goal: install on your own machine, fix what breaks.
-
-1. **Install** — `bootc switch ghcr.io/jrgrant/atomic-cosmic:latest`
-2. **Verify** — browsers, VS Code, Docker, secrets persistence, dev tooling
-3. **Iterate** — fix package conflicts, missing services, COSMIC integration issues
-4. **Document** — install instructions in README
-
----
-
-## Phase 6 — Maintain
-
-Goal: keep it running with minimal ongoing effort.
-
-1. **Watch FCA releases** — CI auto-rebuilds, alerts on build failure
-2. **Watch Bluefin dx changes** — periodic diff of bluefin submodule for new tooling
-3. **Quarterly audit** — `/harness-audit` to verify constraints still enforced
-4. **Upstream when possible** — if COSMIC keyring or dev tooling issues get fixed upstream, adapt
-
----
-
-## What we don't do
-
-- We don't maintain our own package repo — all packages come from Fedora, UBlue, or Homebrew
-- We don't fork Bluefin — we reference it, diff it, and apply what we need to FCA
-- We don't support multiple desktop environments — COSMIC only. This is a personal project, not a product
+| Lesson | Detail |
+|--------|--------|
+| Chrome 150 + COSMIC = no keyring | `freedesktop_secret_key_provider.cc` silently fails; portal backend broken |
+| `~/.opt` hacks are a dead end | Flatpak handles desktop files, icons, updates, portal integration |
+| FCA ≠ Silverblue | `/opt` immutable, missing services, COPR needs `ID=fedora` |
+| rpm-ostree needs digest rebase | Same tag = "refs are equal" → use `@sha256:...` |
+| ujust recipe names silently collide | `allow-duplicate-recipes` means no error |
+| `First Run` sentinel breaks Chrome | Corrupted m2os profile; fresh + `--no-first-run` fixes |
+| oo7 is the future (F45) | Our portal/autostart patches are temporary |
