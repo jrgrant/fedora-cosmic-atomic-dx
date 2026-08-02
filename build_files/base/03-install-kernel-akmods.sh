@@ -44,13 +44,13 @@ dnf5 -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$(rpm -E %fedora)".noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$(rpm -E %fedora)".noarch.rpm
 dnf5 -y install \
-    v4l2loopback /tmp/akmods-rpms/kmods/*v4l2loopback*.rpm
+    v4l2loopback /tmp/akmods-rpms/*.rpm
 dnf5 -y remove rpmfusion-free-release rpmfusion-nonfree-release
 
 # NVIDIA AKMODS (triggered by IMAGE_NAME containing "nvidia")
 if [[ "${IMAGE_NAME}" =~ nvidia ]]; then
     # NVIDIA RPMs mounted from akmods_nvidia stage at /tmp/akmods-nv-rpms/
-    IMAGE_NAME="${IMAGE_NAME:-fedora-cosmic-atomic-dx-nvidia}" AKMODNV_PATH="/tmp/akmods-nv-rpms" MULTILIB=0 /tmp/akmods-nv-rpms/ublue-os/nvidia-install.sh
+    IMAGE_NAME="${IMAGE_NAME:-fedora-cosmic-atomic-dx-nvidia}" AKMODNV_PATH="/tmp/akmods-nv-rpms" MULTILIB=0 /tmp/akmods-nv-rpms/nvidia-install.sh
 
     # Blacklist nouveau
     tee /usr/lib/bootc/kargs.d/00-nvidia.toml <<KEOF
