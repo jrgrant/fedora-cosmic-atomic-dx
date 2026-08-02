@@ -12,7 +12,7 @@ for current status.
 - **Bluefin developer tooling**: Homebrew with bluefin taps, `ujust` justfiles,
   distrobox integration, starship prompt
 - **NVIDIA drivers**: kernel-akmods with nvidia-open from ublue-os
-- **COSMIC 1.3.0**: upgraded via adil192 COPR (ahead of stock F44)
+- **COSMIC (latest from COPR)**: upgraded via adil192 COPR (ahead of stock F44 1.1.0)
 - **Keyring fixes**: XDG Desktop Portal secrets wired for COSMIC
 - **Flatpak user apps**: Chrome, Brave, VS Code installed via `ujust bootstrap`
   (no more `~/.opt` hacks — Flatpak handles desktop integration, updates, and
@@ -25,7 +25,7 @@ for current status.
 | Component | Version | Source |
 |-----------|---------|--------|
 | Fedora | 44 | `quay.io/fedora-ostree-desktops/cosmic-atomic:44` |
-| COSMIC | 1.3.0 | `adil192/cosmic-epoch` COPR (F44 base ships 1.1.0) |
+| COSMIC | latest from COPR | `adil192/cosmic-epoch` COPR (F44 base ships 1.1.0) |
 | Kernel | 6.19.x | `ublue-os/akmods:main-44` (tracks `coreos-stable`) |
 | NVIDIA | open | `ublue-os/akmods-nvidia-open:main-44` |
 | Podman | 5.x | F44 base image |
