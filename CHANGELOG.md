@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-02 — Nightly Build Pivot
+
+- Pivoted CI from daily cron (6am UTC) to nightly (2am UTC) with a check-schedule job that skips the build when HEAD hasn't changed since the last successful run; push, PR, and dispatch events continue to build unconditionally (#62)
+
 ## 2026-08-02 — S3+S5: Upstream Dependency Catalog — COPR/Docker Retry Loops and Cosign CI
 
 - Added 3x retry loop to `copr_install_isolated` in copr-helpers.sh following the Tailscale pattern, with explicit error on exhaustion (#60)
