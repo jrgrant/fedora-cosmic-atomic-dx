@@ -19,7 +19,11 @@ done
 
 # Kernel and AKMODS RPMs are mounted from the akmods/akmods_nvidia build stages
 # via Containerfile --mount=type=bind. No skopeo copy needed — the RPMs are
-# already present at /tmp/kernel-rpms, /tmp/akmods-rpms, /tmp/akmods-nv-rpms.
+# already present at:
+#   /tmp/kernel-rpms      (kernel RPMs from akmods /kernel-rpms)
+#   /tmp/akmods-rpms      (ublue-os akmods from akmods /rpms/ublue-os)
+#   /tmp/akmods-kmods     (v4l2loopback etc. from akmods /rpms)
+#   /tmp/akmods-nv-rpms   (NVIDIA RPMs from akmods_nvidia /rpms)
 # Pattern from ublue/Containerfile:32-34 (FROM-based digest-pinned akmods).
 
 # Install Kernel
@@ -44,7 +48,7 @@ dnf5 -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$(rpm -E %fedora)".noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$(rpm -E %fedora)".noarch.rpm
 dnf5 -y install \
-    v4l2loopback /tmp/akmods-rpms/*v4l2loopback*.rpm
+    v4l2loopback /tmp/akmods-kmods/*v4l2loopback*.rpm
 dnf5 -y remove rpmfusion-free-release rpmfusion-nonfree-release
 
 # NVIDIA AKMODS (triggered by IMAGE_NAME containing "nvidia")
