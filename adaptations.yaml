@@ -1,0 +1,90 @@
+---
+# adaptations.yaml — Bill of materials tracking files adapted from
+# upstream bluefin.
+#
+# Each entry records a file that was adapted (forked and modified) from the
+# bluefin upstream submodule. This BOM exists so that when bluefin changes,
+# we can determine which of our adapted files may need review — enabling
+# automated upstream-diff checking in future CI.
+#
+# Schema:
+#   file:            path relative to repo root (the adapted copy)
+#   upstream:        path within the bluefin submodule (the source)
+#   forked_at:       ISO date when the file was initially ported
+#   upstream_commit: commit hash in bluefin at fork point (where recoverable)
+#   notes:           free-text describing what diverged from upstream
+#
+# The forked_at date (2026-06-20) reflects the Phase 2 Containerfile MVP
+# milestone when build scripts were initially ported. Individual commit
+# hashes are populated where git history permits — for files ported before
+# the bluefin submodule was added, upstream_commit is omitted.
+#
+# Maintained by: monthly GC rule "BOM integrity" in HARNESS.md
+
+adaptations:
+  - file: build_files/base/00-image-info.sh
+    upstream: bluefin/build_files/base/00-image-info.sh
+    forked_at: "2026-06-20"
+    notes: >
+      Writes /usr/share/ublue-os/image-info.json and rewrites
+      /usr/lib/os-release with atomic-cosmic identity. Diverged:
+      IMAGE_PRETTY_NAME, IMAGE_NAME, and vendor fields changed from
+      bluefin to atomic-cosmic values.
+
+  - file: build_files/base/03-install-kernel-akmods.sh
+    upstream: bluefin/build_files/base/03-install-kernel-akmods.sh
+    forked_at: "2026-06-20"
+    notes: >
+      Desktop-agnostic kernel swap. Diverged from bluefin: COSMIC-specific
+      cleanup steps, no ZFS kernel pin, no surface/kernel-cache variants.
+      Added NOTE about kernel-rpms auto-extraction and TODO for akmods
+      cache kernel-devel (backported from bluefin 2026-08-02).
+
+  - file: build_files/base/04-packages.sh
+    upstream: bluefin/build_files/base/04-packages.sh
+    forked_at: "2026-06-20"
+    notes: >
+      Stripped all GNOME-specific packages (gnome-shell-extensions,
+      gnome-tweaks, adw-gtk3, etc.). Added COSMIC equivalents where
+      applicable. Package list is the primary divergence surface.
+
+  - file: build_files/base/17-cleanup.sh
+    upstream: bluefin/build_files/base/17-cleanup.sh
+    forked_at: "2026-06-20"
+    notes: >
+      Systemd service enablement and repo cleanup. Diverged: GNOME
+      dconf-update.service omitted for COSMIC compatibility. Desktop-
+      agnostic services retained.
+
+  - file: build_files/base/19-initramfs.sh
+    upstream: bluefin/build_files/base/19-initramfs.sh
+    forked_at: "2026-06-20"
+    notes: >
+      Unchanged from upstream. Kept as a separate adaptation entry because
+      it is a distinct build step that could diverge (e.g., COSMIC-specific
+      initramfs modules). Currently identical to bluefin.
+
+  - file: build_files/dx/00-dx.sh
+    upstream: bluefin/build_files/dx/00-dx.sh
+    forked_at: "2026-06-20"
+    notes: >
+      Desktop-agnostic developer experience packages. All packages in this
+      file work on COSMIC without modification. Diverged from bluefin by
+      omission: GNOME-specific dx tooling (gnome-builder, dconf-editor)
+      was not ported.
+
+  - file: build_files/shared/build-dx.sh
+    upstream: bluefin/build_files/shared/build-dx.sh
+    forked_at: "2026-06-20"
+    notes: >
+      Copies dx system_files and runs dx package installation.
+      Unchanged from upstream structurally; tracked for completeness
+      per BOM completeness mandate.
+
+  - file: build_files/shared/build.sh
+    upstream: bluefin/build_files/shared/build.sh
+    forked_at: "2026-06-20"
+    notes: >
+      Primary build orchestrator. Stripped GNOME-specific steps
+      (build-gnome-extensions.sh). Always runs dx flavour — developer
+      tooling is the whole point of this image. No other divergence.
