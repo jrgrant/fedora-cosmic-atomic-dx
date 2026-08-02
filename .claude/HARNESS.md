@@ -83,6 +83,13 @@
 - **Tool**: none yet
 - **Scope**: pr
 
+### ujust recipe names must not shadow upstream
+
+- **Rule**: Custom ujust recipe names in `60-custom.just` must not collide with upstream recipe names from `ublue-os/main`. A CI check (`scripts/check-recipe-collisions.sh`) diffs recipe names against a known upstream list (`scripts/known-upstream-recipes.txt`). Use namespaced names (e.g. `fca-bootstrap` not `bootstrap`) to avoid silent shadowing caused by `allow-duplicate-recipes`.
+- **Enforcement**: deterministic
+- **Tool**: scripts/check-recipe-collisions.sh
+- **Scope**: pr
+
 ### Local build gate
 
 - **Rule**: Containerfile build and tests must pass locally before pushing to CI

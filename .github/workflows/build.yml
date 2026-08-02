@@ -37,13 +37,10 @@ jobs:
         run: |
           podman pull quay.io/fedora-ostree-desktops/cosmic-atomic:${{ env.FEDORA_VERSION }}
 
+      - name: ujust recipe collision check
+        run: bash scripts/check-recipe-collisions.sh
+
       - name: Build image
-        run: |
-          podman build --no-cache \
-            -t ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.FEDORA_VERSION }} \
-            -t ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.FEDORA_VERSION }}-$(date +%Y%m%d) \
-            -t ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest \
-            .
 
       - name: Structural tests
         run: bats tests/bats/us*.bats
