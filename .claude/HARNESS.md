@@ -131,11 +131,19 @@
 - **Tool**: `git submodule foreach 'git fetch && git diff --stat HEAD..origin/main | wc -l'`
 - **Auto-fix**: false
 
+### Build script drift (bluefin)
+
+- **What it checks**: Whether our build scripts in `build_files/` have diverged from bluefin's upstream versions. Compares our `03-install-kernel-akmods.sh`, `04-packages.sh`, and `19-initramfs.sh` against `bluefin/build_files/base/` equivalents. Flags additions, removals, and material changes for review.
+- **Frequency**: monthly
+- **Enforcement**: agent
+- **Tool**: harness-gc agent
+- **Auto-fix**: false
+
 ---
 
 ## Status
 
-- Last audit: 2026-06-20
-- Constraints enforced: 4/7 (2 deterministic now operational, 2 agent, 3 unverified)
-- Garbage collection active: 2/2
+- Last audit: 2026-08-02
+- Constraints enforced: 6/11 (3 deterministic, 3 agent, 5 unverified)
+- Garbage collection active: 3/3
 - Tools: shellcheck ✅, gitleaks ✅, yamllint ✅, markdownlint-cli2 ✅

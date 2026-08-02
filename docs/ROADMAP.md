@@ -35,11 +35,11 @@
 4. [ ] Quarterly harness audit
 5. [x] README with install instructions
 6. [x] Submodule bump (2026-08-02): bluefin kernel pin 7.0.12, m2os digest updates
-7. [ ] Investigate akmods `${KERNEL}` tag suffix — bluefin added kernel version to akmods image tag. If akmods images become kernel-version-specific, our `03-install-kernel-akmods.sh` will need updating. External research required.
-8. [ ] Backport bluefin akmods improvements — kernel-rpms auto-extraction note, akmods cache TODO
-9. [ ] Periodic submodule diff — compare our build scripts against bluefin upstream for drift (monthly)
-10. [ ] Encode ujust collision CI check (#41)
-11. [ ] Encode local build gate (#40)
+7. [x] Investigate akmods `${KERNEL}` tag suffix — do not adopt. Akmods uses `{flavor}-{fedora_version}` tags. `${KERNEL}` suffix is paired with bluefin's `kernel_pin` CI variable — not applicable without kernel pinning. Research note: `docs/research/2026-08-02-akmods-kernel-tag.md`
+8. [x] Backport bluefin akmods improvements — added NOTE (kernel-rpms auto-extraction) and TODO (akmods cache kernel-devel) comments to `03-install-kernel-akmods.sh`
+9. [x] Periodic submodule diff — added "Build script drift (bluefin)" GC rule (monthly, agent enforcement) to HARNESS.md
+10. [x] Encode ujust collision CI check (#41)
+11. [x] Encode local build gate (#40)
 
 ---
 
