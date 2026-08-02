@@ -17,12 +17,10 @@ for pkg in kernel kernel-core kernel-modules kernel-modules-core kernel-modules-
     rpm --erase $pkg --nodeps
 done
 
-# Fetch Common AKMODS & Kernel RPMS
-skopeo copy --retry-times 3 docker://ghcr.io/ublue-os/akmods:"${AKMODS_FLAVOR}"-"$(rpm -E %fedora)" dir:/tmp/akmods
-AKMODS_TARGZ=$(jq -r '.layers[].digest' </tmp/akmods/manifest.json | cut -d : -f 2)
-tar -xvzf /tmp/akmods/"$AKMODS_TARGZ" -C /tmp/
-mv /tmp/rpms/* /tmp/akmods/
-# NOTE: kernel-rpms should auto-extract into correct location
+# Kernel and AKMODS RPMs are mounted from the akmods/akmods_nvidia build stages
+# via Containerfile --mount=type=bind. No skopeo copy needed — the RPMs are
+# already present at /tmp/kernel-rpms, /tmp/akmods-rpms, /tmp/akmods-nv-rpms.
+# Pattern from ublue/Containerfile:32-34 (FROM-based digest-pinned akmods).
 
 # Install Kernel
 dnf5 -y install \
@@ -46,19 +44,13 @@ dnf5 -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$(rpm -E %fedora)".noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$(rpm -E %fedora)".noarch.rpm
 dnf5 -y install \
-    v4l2loopback /tmp/akmods/kmods/*v4l2loopback*.rpm
+    v4l2loopback /tmp/akmods-rpms/kmods/*v4l2loopback*.rpm
 dnf5 -y remove rpmfusion-free-release rpmfusion-nonfree-release
 
 # NVIDIA AKMODS (triggered by IMAGE_NAME containing "nvidia")
 if [[ "${IMAGE_NAME}" =~ nvidia ]]; then
-    # Fetch NVIDIA RPMs
-    skopeo copy --retry-times 3 docker://ghcr.io/ublue-os/akmods-nvidia-open:"${AKMODS_FLAVOR}"-"$(rpm -E %fedora)" dir:/tmp/akmods-rpms
-    NVIDIA_TARGZ=$(jq -r '.layers[].digest' </tmp/akmods-rpms/manifest.json | cut -d : -f 2)
-    tar -xvzf /tmp/akmods-rpms/"$NVIDIA_TARGZ" -C /tmp/
-    mv /tmp/rpms/* /tmp/akmods-rpms/
-
-    # Install NVIDIA RPMs
-    IMAGE_NAME="${IMAGE_NAME:-fedora-cosmic-atomic-dx-nvidia}" AKMODNV_PATH="/tmp/akmods-rpms" MULTILIB=0 /tmp/akmods-rpms/ublue-os/nvidia-install.sh
+    # NVIDIA RPMs mounted from akmods_nvidia stage at /tmp/akmods-nv-rpms/
+    IMAGE_NAME="${IMAGE_NAME:-fedora-cosmic-atomic-dx-nvidia}" AKMODNV_PATH="/tmp/akmods-nv-rpms" MULTILIB=0 /tmp/akmods-nv-rpms/ublue-os/nvidia-install.sh
 
     # Blacklist nouveau
     tee /usr/lib/bootc/kargs.d/00-nvidia.toml <<KEOF

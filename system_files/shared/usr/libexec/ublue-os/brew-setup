@@ -1,6 +1,15 @@
 #!/usr/bin/bash
 # brew-setup — Homebrew first-run installer
 # Invoked by brew-setup.service at first boot.
+#
+# Uses a vendored installer script (brew-install.sh) rather than fetching
+# from HEAD at runtime. The vendored copy eliminates the supply-chain risk
+# of curl|bash from a mutable URL. Update periodically:
+#   curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh \\
+#     -o system_files/shared/usr/libexec/ublue-os/brew-install.sh
 set -euo pipefail
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || true
+/usr/libexec/ublue-os/brew-install.sh || {
+    echo "ERROR: Homebrew install failed"
+    exit 1
+}
 touch /var/home/linuxbrew/.linuxbrew/.setup-complete
