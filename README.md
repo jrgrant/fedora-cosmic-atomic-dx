@@ -20,6 +20,24 @@ for current status.
 - **Dev mode**: mutable system-state escape hatch for packages and toolchains
   without rpm-ostree layering
 
+## Component Versions
+
+| Component | Version | Source |
+|-----------|---------|--------|
+| Fedora | 44 | `quay.io/fedora-ostree-desktops/cosmic-atomic:44` |
+| COSMIC | 1.3.0 | `adil192/cosmic-epoch` COPR (F44 base ships 1.1.0) |
+| Kernel | 6.19.x | `ublue-os/akmods:main-44` (tracks `coreos-stable`) |
+| NVIDIA | open | `ublue-os/akmods-nvidia-open:main-44` |
+| Podman | 5.x | F44 base image |
+| Docker | latest stable | `docker-ce.repo` |
+| Homebrew | 4.x | `ublue-os/brew:latest` |
+| VS Code | latest stable | `brew install --cask visual-studio-code-linux` |
+| Distrobox | 2.x | F44 base image |
+
+> **Digest pinning**: All OCI images are resolved to content digests at build
+> time for reproducible builds. Mutable tags are used only for local development.
+> See `Containerfile` for the Null Object digest-pinning pattern.
+
 ## Install
 
 ### Prerequisites
