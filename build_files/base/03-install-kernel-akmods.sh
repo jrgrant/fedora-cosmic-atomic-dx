@@ -22,6 +22,7 @@ skopeo copy --retry-times 3 docker://ghcr.io/ublue-os/akmods:"${AKMODS_FLAVOR}"-
 AKMODS_TARGZ=$(jq -r '.layers[].digest' </tmp/akmods/manifest.json | cut -d : -f 2)
 tar -xvzf /tmp/akmods/"$AKMODS_TARGZ" -C /tmp/
 mv /tmp/rpms/* /tmp/akmods/
+# NOTE: kernel-rpms should auto-extract into correct location
 
 # Install Kernel
 dnf5 -y install \
@@ -29,6 +30,7 @@ dnf5 -y install \
     /tmp/kernel-rpms/kernel-core-*.rpm \
     /tmp/kernel-rpms/kernel-modules-*.rpm
 
+# TODO: Figure out why akmods cache is pulling in akmods/kernel-devel
 dnf5 -y install \
     /tmp/kernel-rpms/kernel-devel-*.rpm
 
