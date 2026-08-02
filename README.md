@@ -74,6 +74,53 @@ This installs Homebrew, starship, distrobox, Flatpak user apps (Chrome, Brave,
 VS Code), and configures your environment. Run `ujust` with no arguments to see
 all available recipes.
 
+## Polyglot Development
+
+The bootstrap creates a `distrobox` container (`atomic-dev`) with GCC, Python,
+Node.js, and build essentials. For polyglot workflows requiring multiple
+isolated toolchains, create additional distrobox containers and attach VS Code
+to whichever you need.
+
+### Dev Containers attach (recommended)
+
+The simplest approach — VS Code on the host attaches to any distrobox container:
+
+```bash
+# Create a dedicated toolchain container
+distrobox create --image fedora:44 --name rust-dev
+distrobox enter rust-dev -- sudo dnf install -y rust cargo rust-analyzer
+
+# In VS Code: F1 → "Dev Containers: Attach to Running Container" → rust-dev
+```
+
+VS Code's extensions, language servers, and terminal all run inside the container
+with full access to its toolchain. Create one container per language ecosystem.
+
+### Distrobox export (per-toolchain VS Code instances)
+
+For full toolchain isolation with separate VS Code instances:
+
+```bash
+distrobox create --image archlinux:latest --name arch-dev
+distrobox enter arch-dev
+sudo pacman -S code  # or visual-studio-code-bin from AUR
+distrobox-export --app code
+```
+
+Each distrobox gets its own VS Code with its own extensions and settings.
+
+### DevPod (open-source alternative)
+
+[DevPod](https://github.com/loft-sh/devpod) is an open-source (MPL-2.0),
+client-only dev container tool that works with podman natively and supports
+VSCodium and JetBrains IDEs:
+
+```bash
+curl -fsSL https://github.com/loft-sh/devpod/releases/latest/download/devpod-linux-amd64 -o devpod
+chmod +x devpod
+./devpod up ./my-project  # uses .devcontainer/devcontainer.json
+```
+
 ## Build locally
 
 ```bash
