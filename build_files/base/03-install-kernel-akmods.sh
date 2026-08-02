@@ -44,7 +44,7 @@ dnf5 -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$(rpm -E %fedora)".noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$(rpm -E %fedora)".noarch.rpm
 dnf5 -y install \
-    v4l2loopback /tmp/akmods-rpms/*.rpm
+    v4l2loopback /tmp/akmods-rpms/*v4l2loopback*.rpm
 dnf5 -y remove rpmfusion-free-release rpmfusion-nonfree-release
 
 # NVIDIA AKMODS (triggered by IMAGE_NAME containing "nvidia")
