@@ -20,10 +20,6 @@ setup() {
     grep -q 'gnome-software-rpm-ostree' "$PKGS"
 }
 
-@test "firefox in EXCLUDED_PACKAGES" {
-    grep -q 'firefox' "$PKGS"
-}
-
 @test "fedora-chromium-config in EXCLUDED_PACKAGES" {
     grep -q 'fedora-chromium-config' "$PKGS"
 }

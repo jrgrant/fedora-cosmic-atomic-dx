@@ -69,7 +69,7 @@ jobs:
             .
 
       - name: Structural tests
-        run: bats tests/bats/us*.bats
+        run: bats tests/bats/*.bats
 
       - name: Build validation tests
         run: BUILD_TEST=1 bats tests/bats/build-validation.bats
@@ -81,6 +81,9 @@ jobs:
           podman push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.FEDORA_VERSION }}
           podman push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.FEDORA_VERSION }}-$(date +%Y%m%d)
           podman push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
 
       - name: Sign with cosign (main only)
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
