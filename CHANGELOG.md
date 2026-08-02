@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-08-02 — S3+S5: Upstream Dependency Catalog — COPR/Docker Retry Loops and Cosign CI
+
+- Added 3x retry loop to `copr_install_isolated` in copr-helpers.sh following the Tailscale pattern, with explicit error on exhaustion (#60)
+- Added 3x retry loop to Docker CE repo fetch in dx/00-dx.sh with explicit error after retry exhaustion (#60)
+- Added explicit cosign installation step (`sigstore/cosign-installer@v3`) to CI workflow; fixed test glob from `us*.bats` to `*.bats` so all test files run (#60)
+- Added 6 structural bats tests for S3 retry loops and 3 structural bats tests for S5 cosign CI (#60)
+- Code-mode adversarial review: 5/5 objections accepted, no blocking issues (#60)
+
 ## 2026-08-02 — S6: Justfile Consolidation and Browser Install Mechanism
 
 - Consolidated divergent justfiles: archived the dead rpm2cpio/~/.opt bootstrap path (`justfiles/fedora-cosmic-atomic-dx.just`) to `docs/archive/` with a deprecation header, leaving `60-custom.just` as the single active justfile (#54)

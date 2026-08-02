@@ -77,8 +77,13 @@ if [[ ! "${IMAGE_NAME}" =~ nvidia ]]; then
     rocminfo
 fi
 
-# Docker CE
-dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
+# Docker CE — with retry (Docker download mirrors can be transiently unavailable)
+# Pattern from Tailscale repo fetch at build_files/base/04-packages.sh:91.
+for i in 1 2 3; do
+    dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo && break
+    echo "Retry $i/3 for Docker CE repo..."
+    sleep 10
+done || { echo "ERROR: Failed to fetch Docker CE repo after 3 attempts"; exit 1; }
 sed -i "s/enabled=.*/enabled=0/g" /etc/yum.repos.d/docker-ce.repo
 dnf -y install --enablerepo=docker-ce-stable \
     containerd.io \
