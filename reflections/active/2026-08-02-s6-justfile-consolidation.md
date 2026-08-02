@@ -1,0 +1,8 @@
+- **Date**: 2026-08-02
+- **Agent**: integration-agent
+- **Task**: S6 — Consolidate justfile divergence, Flatpak browsers with error logging, VS Code via brew cask, Flathub verification
+- **Surprise**: CI build failed on a pre-existing test (firefox in EXCLUDED_PACKAGES, us2-gnome-isolation.bats) unrelated to S6. Main branch also has 3 consecutive build failures. The S6 tests (s6-justfile-consolidation.bats) passed but weren't exercised in CI because the workflow globs `us*.bats` — the `s6` prefix doesn't match.
+- **Proposal**: Update CI test glob to `tests/bats/*.bats` so all test files run, not just those matching `us*`. Alternatively, rename `s6-justfile-consolidation.bats` to `us6-justfile-consolidation.bats`.
+- **Improvement**: The CI glob `us*.bats` silently skipped the new S6 tests. A mismatch between test naming convention and CI glob is a trap that should be caught at the tdd-agent stage.
+- **Signal**: failure
+- **Constraint**: none

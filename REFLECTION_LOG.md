@@ -30,6 +30,8 @@
 
 ---
 
+---
+
 - **Date**: 2026-06-20
 - **Agent**: orchestrator (DeepSeek V4 Pro)
 - **Task**: Phase 2-4: Containerfile MVP, CI pipeline, bootstrap script — full pipeline from spec through integration
@@ -55,8 +57,19 @@
   3. The `[bootstrap]`, `[info]`, `[update]`, `[rollback]` annotations before recipe names aren't valid just syntax — they're not recognised attributes and would either be ignored or error.
   4. The Justfile `bootstrap` target → `scripts/bootstrap.sh` → `ujust bootstrap` creates a circular reference when `ujust` resolves to `just` and a local `Justfile` with a `bootstrap` target is in scope.
   5. Live testing on an atomic system can't `cp` into `/usr` — immutable. Direct `just --justfile` is the iteration path.
-- **Proposal**: Add to AGENTS.md GOTCHAS: ujust justfile path, recipe name collisions, circular delegation trap, atomic filesystem iteration, invalid just syntax.
-- **Improvement**: The build succeeded but three categories of defect (wrong path, name collision, invalid syntax) passed through undetected. A pre-build validation agent that checks: all `system_files/` paths resolve to their expected runtime locations, custom justfile recipe names don't collide with upstream, and `just --justfile <file> --check` passes on all justfiles — would catch these in seconds rather than after a 26-minute build + reboot. Consider adding `just --check` to the existing `shellcheck`/`yamllint` test suite.
+
+- **Proposal**: Add to AGENTS.md GOTCHAS:
+  - "ujust justfiles belong in `/usr/share/ublue-os/just/`, not `justfiles/`. The entry point `/usr/share/ublue-os/justfile` imports from `just/`."
+  - "Custom ujust recipe names must not collide with upstream recipes. Check `/usr/share/ublue-os/just/*.just` before naming. Prefer namespaced names (e.g. `rebase-helper` not `update`)."
+  - "Justfile targets that delegate to ujust recipes must use a different name to avoid circular resolution when `ujust` falls through to `just`."
+  - "Atomic images: `/usr` is immutable at runtime. Iterate on justfiles with `just --justfile <path>`, not by copying into `/usr`."
+
+- **Improvement**: The build succeeded but three categories of defect (wrong path, name collision, invalid syntax) passed through undetected. A pre-build validation agent that checks:
+  - All `system_files/` paths resolve to their expected runtime locations
+  - Custom justfile recipe names don't collide with upstream
+  - `just --justfile <file> --check` passes on all justfiles
+  would catch these in seconds rather than after a 26-minute build + reboot. Consider adding `just --check` to the existing `shellcheck`/`yamllint` test suite.
+
 - **Signal**: failure
 - **Constraint**: ujust recipe names must not shadow upstream recipes — add a CI check that diffs custom recipe names against upstream `/usr/share/ublue-os/just/*.just`
 - **Session metadata**:
@@ -88,14 +101,52 @@
 
 ---
 
+---
+date: 2026-08-02
+agent: orchestrator (DeepSeek V4 Pro)
+task: "Research pipeline: determine which dependencies can be externalized to submodules"
+surprise: "Self-review of a research note is structurally broken — same agent, same context window, same files already read. The first 'review' found zero objections. A genuinely independent review (Explore subagent, fresh context) found 17 — including one severe misreading where I fabricated 'improvements' that exist identically in both files."
+proposal: "Add to AGENTS.md GOTCHAS: 'Self-review of research notes is confirmation bias. The research-reviewer agent must have independent context (fresh dispatch, no prior knowledge of the analysis). If the agent is not registered, dispatch Explore or another subagent with the review protocol and the note file path — do not run the review inline.'"
+improvement: "Register the research-reviewer agent with the VS Code agent API. Until then, the orchestrator must always dispatch an independent subagent for adversarial review — never do it inline. The cost is one extra dispatch; the alternative is fabricated findings surviving into decisions."
+signal: failure
+constraint: "Research notes require independent adversarial review with fresh context before informing any decision (implementation, architecture, or dependency changes). Self-review (same agent, same context) does not satisfy this constraint."
+session_metadata:
+  duration: "45 min"
+  model_tiers_used: "flagship (100%)"
+  pipeline_stages_completed: "N/A (research task — analysis + adversarial review)"
+  agent_delegation: "partial — Explore subagent for review"
+
+---
+
+- **Date**: 2026-08-02
+- **Agent**: orchestrator (manual — direct collaboration)
+- **Task**: Assess impact of upstream submodule updates (bluefin kernel pin, m2os digest bumps) using codebase-analyst
+- **Surprise**: Attempted to dispatch `codebase-analyst` via subagent tool — returned "agent not found." The agent file exists at `.copilot/plugins/ai-literacy-superpowers/ai-literacy-superpowers/agents/codebase-analyst.agent.md` but is not registered in the VS Code agent dispatch system. The orchestrator's own instructions list it as a dispatchable agent, but the subagent tool only recognizes agents registered in the VS Code extensions API. The analysis had to be run inline by the orchestrator instead of being delegated. Same issue affects `technical-researcher` and `research-reviewer` — all three research pipeline agents exist as files but cannot be dispatched as subagents.
+- **Proposal**: Add to AGENTS.md GOTCHAS: "Agent files created in ai-literacy-superpowers are documentation until registered with the VS Code agent API. The subagent tool cannot dispatch them. Until registration is complete, inline analysis by the orchestrator is the fallback." Also: either register these agents with the VS Code API, or document the registration gap as a known limitation of the research pipeline.
+- **Improvement**: The research pipeline has three well-designed agents and a two-mode adversarial reviewer, but none can be dispatched. This is a documentation-vs-reality gap identical to the one the harness-auditor checks for in HARNESS.md. The pipeline's design is complete; its implementation is blocked on agent registration.
+- **Signal**: failure
+- **Constraint**: Agent files must be registered before they can appear in orchestrator dispatch instructions — add harness check that agent files in ai-literacy-superpowers/agents/ have corresponding VS Code agent registrations
+- **Session metadata**:
+  - Duration: 15 min
+  - Model tiers used: flagship (100%)
+  - Pipeline stages completed: N/A (manual)
+  - Agent delegation: attempted codebase-analyst, failed — ran inline
+
+---
+
 - **Date**: 2026-08-02
 - **Agent**: orchestrator (manual — direct collaboration)
 - **Task**: Design and implement research pipeline: technical-researcher skill + agent, research-reviewer adversarial agent, codebase-analyst skill + agent, context isolation between internal/external research
-- **Surprise**: Two structural gaps emerged during review of the initial single-agent design. First, self-evaluation (Phase 5 gap-check) is insufficient for adversarial scrutiny — the same model checking its own work cannot reliably detect confirmation bias, source misreading, or unstated assumptions. The project already had `advocatus-diaboli` for this pattern; the research pipeline needed its equivalent. Second, a single agent with both web and codebase tools would context-pollute — chasing external tangents instead of finishing structural analysis, and confusing "what the docs say" with "what the code does." The split into internal (codebase-analyst) and external (technical-researcher) with a two-mode adversarial reviewer (research-reviewer) mirrors the main pipeline's spec-writer→advocatus-diaboli pattern.
-- **Proposal**: Add to AGENTS.md ARCH_DECISIONS: research architecture split with context isolation. See full ADR at docs/superpowers/adr/2026-08-02-split-research-architecture.md.
-- **Improvement**: The split adds dispatch latency for questions spanning both domains (two dispatches instead of one). Most research questions are either internal or external, not both. The three-agent maintenance burden is mitigated by shared skill infrastructure.
+- **Surprise**: The initial single-agent design had two structural gaps that emerged during review:
+  1. Self-evaluation (Phase 5 gap-check) is insufficient for adversarial scrutiny — the same model checking its own work cannot reliably detect confirmation bias, source misreading, or unstated assumptions. The project already had `advocatus-diaboli` for this pattern; the research pipeline needed its equivalent.
+  2. A single agent with both web and codebase tools would context-pollute — chasing external tangents instead of finishing structural analysis, and confusing "what the docs say" with "what the code does." Two fundamentally different activities were sharing one agent.
+  3. The split into internal (codebase-analyst) and external (technical-researcher) with a two-mode adversarial reviewer (research-reviewer) mirrors the main pipeline's spec-writer→advocatus-diaboli→choice-cartographer pattern.
+
+- **Proposal**: Add to AGENTS.md ARCH_DECISIONS: "Research is split into internal (codebase-analyst, workspace tools only) and external (technical-researcher, web tools only) with adversarial review (research-reviewer, two modes). Agents are context-isolated — fresh dispatch per agent, no shared state. The handoff mechanism: analyst flags External Research Needed items, orchestrator dispatches researcher against the specific question."
+- **Improvement**: The split architecture adds dispatch latency for questions spanning both domains (two dispatches instead of one). Most research questions are either internal or external, not both, so this is acceptable. The three-agent maintenance burden is mitigated by shared skill infrastructure.
+
 - **Signal**: design
-- **Constraint**: Research pipeline must include adversarial review — no research note is acted on without a research-reviewer pass
+- **Constraint**: Research pipeline must include adversarial review — no research note is acted on without a research-reviewer pass. Same principle as the main pipeline's diaboli gate.
 - **Session metadata**:
   - Duration: 90 min
   - Model tiers used: flagship (100%)
@@ -105,18 +156,13 @@
 ---
 
 - **Date**: 2026-08-02
-- **Agent**: orchestrator (manual — direct collaboration)
-- **Task**: Assess impact of upstream submodule updates (bluefin kernel pin, m2os digest bumps) using codebase-analyst
-- **Surprise**: Attempted to dispatch `codebase-analyst` via subagent tool — returned "agent not found." The agent file exists at `.copilot/plugins/ai-literacy-superpowers/ai-literacy-superpowers/agents/codebase-analyst.agent.md` but is not registered in the VS Code agent dispatch system. The orchestrator's own instructions list it as a dispatchable agent, but the subagent tool only recognizes agents registered in the VS Code extensions API. The analysis had to be run inline by the orchestrator instead of being delegated. Same issue affects `technical-researcher` and `research-reviewer` — all three research pipeline agents exist as files but cannot be dispatched as subagents.
-- **Proposal**: Add to AGENTS.md GOTCHAS: agent files are documentation until VS Code agent registration is complete.
-- **Improvement**: The research pipeline design is complete but blocked on agent registration. This is a documentation-vs-reality gap.
+- **Agent**: integration-agent
+- **Task**: S6 — Consolidate justfile divergence, Flatpak browsers with error logging, VS Code via brew cask, Flathub verification
+- **Surprise**: CI build failed on a pre-existing test (firefox in EXCLUDED_PACKAGES, us2-gnome-isolation.bats) unrelated to S6. Main branch also has 3 consecutive build failures. The S6 tests (s6-justfile-consolidation.bats) passed but weren't exercised in CI because the workflow globs `us*.bats` — the `s6` prefix doesn't match.
+- **Proposal**: Update CI test glob to `tests/bats/*.bats` so all test files run, not just those matching `us*`. Alternatively, rename `s6-justfile-consolidation.bats` to `us6-justfile-consolidation.bats`.
+- **Improvement**: The CI glob `us*.bats` silently skipped the new S6 tests. A mismatch between test naming convention and CI glob is a trap that should be caught at the tdd-agent stage.
 - **Signal**: failure
-- **Constraint**: Agent files must be registered before they can appear in orchestrator dispatch instructions
-- **Session metadata**:
-  - Duration: 15 min
-  - Model tiers used: flagship (100%)
-  - Pipeline stages completed: N/A (manual)
-  - Agent delegation: attempted codebase-analyst, failed — ran inline
+- **Constraint**: none
 
 ---
 
@@ -128,8 +174,3 @@
 - **Improvement**: The CI pipeline has a pre-existing failing test on main that blocks all PRs from getting a green build. This should be addressed (separate issue) or the test should be marked as skipped until the Firefox exclusion is resolved.
 - **Signal**: failure
 - **Constraint**: none
-- **Session metadata**:
-  - Duration: unknown
-  - Model tiers used: unknown
-  - Pipeline stages completed: 5/5 (spec-writer, tdd-agent, implementer, code-reviewer, integration-agent)
-  - Agent delegation: full pipeline
