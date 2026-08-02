@@ -83,6 +83,13 @@
 - **Tool**: none yet
 - **Scope**: pr
 
+### Local build gate
+
+- **Rule**: Containerfile build and tests must pass locally before pushing to CI
+- **Enforcement**: unverified
+- **Tool**: none yet
+- **Scope**: pr
+
 ### Supply chain provenance
 
 - **Rule**: Every package source, container image, and dependency must come from an official, actively-maintained upstream. No unmaintained forks, no unvetted third-party repos. The base OCI image must be an official Fedora Atomic spin (FCA qualifies; m2OS does not). Maintenance cadence of the source is part of the security evaluation — neglect is disqualifying.
