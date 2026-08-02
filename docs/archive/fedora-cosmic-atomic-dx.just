@@ -1,3 +1,7 @@
+# DEPRECATED: rpm2cpio ~/.opt bootstrap path — removed 2026-08-02.
+# Archived for reference. The active justfile is 60-custom.just (Flatpak + brew).
+# See: docs/research/2026-08-02-upstream-dependency-catalog.md F8
+
 # fedora-cosmic-atomic-dx — ujust recipes (system-wide)
 
 # Run after rebasing to a new image
