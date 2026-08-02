@@ -1,0 +1,24 @@
+# Known upstream ujust recipe names from ublue-os/main
+# Source: /usr/share/ublue-os/just/*.just in the ublue-os/main OCI image
+# Update this list when ublue adds new recipes
+
+bootstrap
+update
+info
+rollback
+check-update
+changelog
+clean
+distrobox
+fix
+flatpak
+help
+nvidia
+packages
+reboot
+refresh
+setup
+shell
+system
+tailscale
+toggle

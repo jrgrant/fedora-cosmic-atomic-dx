@@ -1,7 +1,7 @@
 # fedora-cosmic-atomic-dx — ujust recipes (system-wide)
 
 # Run after rebasing to a new image
-bootstrap:
+fca-bootstrap:
     #!/usr/bin/bash
     echo "==> fedora-cosmic-atomic-dx bootstrap"
     echo ""
@@ -72,7 +72,7 @@ bootstrap:
     echo "Run 'ujust rebase-helper' to update brew + flatpak packages"
 
 # Print system info
-info:
+fca-info:
     #!/usr/bin/bash
     echo "Image: $(rpm-ostree status --json 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); [print(d.get('origin','')) for d in d.get('deployments',[]) if d.get('booted')]" 2>/dev/null || echo unknown)"
     echo "Kernel: $(uname -r)"
@@ -95,6 +95,6 @@ rebase-helper:
     echo "  Brave: auto-updates via Brave updater"
 
 # Rollback to previous deployment
-rollback:
+fca-rollback:
     sudo rpm-ostree rollback
     @echo "==> Reboot to apply: sudo systemctl reboot"
