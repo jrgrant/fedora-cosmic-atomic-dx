@@ -85,3 +85,19 @@
   - Model tiers used: standard (100%)
   - Pipeline stages completed: N/A (manual)
   - Agent delegation: none
+
+---
+
+- **Date**: 2026-08-02
+- **Agent**: orchestrator (manual — direct collaboration)
+- **Task**: Design and implement research pipeline: technical-researcher skill + agent, research-reviewer adversarial agent, codebase-analyst skill + agent, context isolation between internal/external research
+- **Surprise**: Two structural gaps emerged during review of the initial single-agent design. First, self-evaluation (Phase 5 gap-check) is insufficient for adversarial scrutiny — the same model checking its own work cannot reliably detect confirmation bias, source misreading, or unstated assumptions. The project already had `advocatus-diaboli` for this pattern; the research pipeline needed its equivalent. Second, a single agent with both web and codebase tools would context-pollute — chasing external tangents instead of finishing structural analysis, and confusing "what the docs say" with "what the code does." The split into internal (codebase-analyst) and external (technical-researcher) with a two-mode adversarial reviewer (research-reviewer) mirrors the main pipeline's spec-writer→advocatus-diaboli pattern.
+- **Proposal**: Add to AGENTS.md ARCH_DECISIONS: research architecture split with context isolation. See full ADR at docs/superpowers/adr/2026-08-02-split-research-architecture.md.
+- **Improvement**: The split adds dispatch latency for questions spanning both domains (two dispatches instead of one). Most research questions are either internal or external, not both. The three-agent maintenance burden is mitigated by shared skill infrastructure.
+- **Signal**: design
+- **Constraint**: Research pipeline must include adversarial review — no research note is acted on without a research-reviewer pass
+- **Session metadata**:
+  - Duration: 90 min
+  - Model tiers used: flagship (100%)
+  - Pipeline stages completed: N/A (design session)
+  - Agent delegation: none

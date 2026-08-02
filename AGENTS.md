@@ -14,6 +14,13 @@
 
 <!-- Patterns and idioms that work well in this codebase. -->
 
+- **Context-isolated agent dispatch**: When two agents handle different domains
+  (e.g. codebase vs web), dispatch them independently with fresh context rather
+  than chaining. The handoff is an artifact (a research note), not shared state.
+  Each agent's tool set is scoped to its domain — no web tools for codebase
+  agents, no codebase-exploration tools for web agents. This prevents context
+  pollution and makes findings independently verifiable.
+
 ## GOTCHAS
 
 <!-- Traps, surprises, and non-obvious constraints. Initially empty — entries
@@ -75,6 +82,11 @@
 
 - **Decision**: Project root holds harness config + output artifacts; submodules hold references.
   **Reason**: Clean separation between our work product and upstream sources. The harness (CLAUDE.md, HARNESS.md, agents, CI) is first-class project content.
+
+- **Decision**: Research is split into internal (codebase-analyst, workspace tools only) and external (technical-researcher, web tools only) with adversarial review (research-reviewer, two modes: external/codebase). Agents are context-isolated — fresh dispatch per agent, no shared state. The handoff mechanism: analyst flags External Research Needed items, orchestrator dispatches researcher against the specific question.
+  **Reason**: A single agent with both web and codebase tools context-pollutes — chasing external tangents instead of finishing structural analysis, and confusing "what the docs say" with "what the code does." Self-review (gap-check) is necessary but insufficient; adversarial review by an independent agent with fresh context catches confirmation bias, source misreading, and unstated assumptions. This mirrors the main pipeline's spec-writer→advocatus-diaboli pattern.
+  **Alternatives considered**: single agent with modes (rejected — mode-switching within one context window doesn't solve context pollution), no adversarial review (rejected — contradicts established pipeline pattern).
+  **See:** `docs/superpowers/adr/2026-08-02-split-research-architecture.md`
 
 ## TEST_STRATEGY
 

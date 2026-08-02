@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-08-02 — Research Pipeline Architecture
+
+- New agent: `codebase-analyst` — internal research (workspace only, no web tools)
+- New agent: `technical-researcher` — external research (web only, no codebase tools)
+- New agent: `research-reviewer` — adversarial review, two modes (external/codebase)
+- New skill: `codebase-analysis` — four-phase loop: scope → map → inspect → report
+- New skill: `technical-research` — five-phase loop: frame → search → evaluate → synthesise → gap-check, with Phase 6 adversarial review
+- ADR: split research architecture with context isolation (`docs/superpowers/adr/2026-08-02-split-research-architecture.md`)
+- MODEL_ROUTING.md: routing table and token budget for all three agents
+- AGENTS.md: context-isolated dispatch pattern + research architecture decision
+
 ## 2026-07-17 — Phase 6: Bootstrap fixes, CI re-enabled, README
 
 - COSMIC keyring fixes: portal `UseIn=COSMIC`, autostart `OnlyShowIn=COSMIC`, D-Bus activation env for gcr-prompter
