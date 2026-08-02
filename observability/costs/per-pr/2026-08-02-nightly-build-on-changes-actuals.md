@@ -2,7 +2,7 @@
 date: 2026-08-02
 branch: nightly-build-on-changes
 issue: "#62"
-pr: null
+pr: "#63"
 task_summary: "Pivot build CI from daily cron to nightly with check-schedule gating"
 progressed_slice: null
 stages_run:
