@@ -2,10 +2,8 @@ name: Build and Publish atomic-cosmic
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # nightly at 2am UTC
+    - cron: '0 2 * * *'  # nightly at 2am UTC — gated by check-schedule (only if HEAD changed)
   workflow_dispatch:
-  pull_request:
-    branches: [main]
 
 env:
   IMAGE_NAME: fedora-cosmic-atomic-dx-nvidia
