@@ -1,0 +1,8 @@
+- **Date**: 2026-08-02
+- **Agent**: integration-agent
+- **Task**: Integrate S1+S2+S4+S8: akmods FROM stages, COSMIC bus factor, vendored Homebrew, dead repo cleanup
+- **Surprise**: CI completed in 4 seconds (single check: Harness Constraints only). No build CI was triggered — the push-only trigger didn't fire because the squash-merge commit didn't trigger a push-event build run separately. Issues #55-58 were already closed before integration-agent ran (likely closed by the orchestrator or a prior step).
+- **Proposal**: none
+- **Improvement**: Pre-close issues earlier in the pipeline or leave them open for integration-agent — the double-close is harmless but noisy in logs (`! already closed`).
+- **Signal**: none
+- **Constraint**: none

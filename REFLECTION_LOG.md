@@ -157,6 +157,17 @@ session_metadata:
 
 - **Date**: 2026-08-02
 - **Agent**: integration-agent
+- **Task**: Integrate S1+S2+S4+S8: akmods FROM stages, COSMIC bus factor, vendored Homebrew, dead repo cleanup
+- **Surprise**: CI completed in 4 seconds (single check: Harness Constraints only). No build CI was triggered — the push-only trigger didn't fire because the squash-merge commit didn't trigger a push-event build run separately. Issues #55-58 were already closed before integration-agent ran (likely closed by the orchestrator or a prior step).
+- **Proposal**: none
+- **Improvement**: Pre-close issues earlier in the pipeline or leave them open for integration-agent — the double-close is harmless but noisy in logs (`! already closed`).
+- **Signal**: none
+- **Constraint**: none
+
+---
+
+- **Date**: 2026-08-02
+- **Agent**: integration-agent
 - **Task**: S6 — Consolidate justfile divergence, Flatpak browsers with error logging, VS Code via brew cask, Flathub verification
 - **Surprise**: CI build failed on a pre-existing test (firefox in EXCLUDED_PACKAGES, us2-gnome-isolation.bats) unrelated to S6. Main branch also has 3 consecutive build failures. The S6 tests (s6-justfile-consolidation.bats) passed but weren't exercised in CI because the workflow globs `us*.bats` — the `s6` prefix doesn't match.
 - **Proposal**: Update CI test glob to `tests/bats/*.bats` so all test files run, not just those matching `us*`. Alternatively, rename `s6-justfile-consolidation.bats` to `us6-justfile-consolidation.bats`.
