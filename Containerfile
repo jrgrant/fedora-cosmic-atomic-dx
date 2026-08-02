@@ -46,8 +46,8 @@ ARG IMAGE_FLAVOR="dx"
 RUN --mount=type=cache,dst=/var/cache/libdnf5 \
     --mount=type=cache,dst=/var/cache/rpm-ostree \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
-    --mount=type=bind,from=akmods,src=/rpms/ublue-os,dst=/tmp/akmods-rpms \
-    --mount=type=bind,from=akmods,src=/rpms,dst=/tmp/akmods-kmods \
+    --mount=type=bind,from=akmods,src=/rpms/common,dst=/tmp/akmods-rpms \
+    --mount=type=bind,from=akmods,src=/rpms/kmods,dst=/tmp/akmods-kmods \
     --mount=type=bind,from=akmods,src=/kernel-rpms,dst=/tmp/kernel-rpms \
     --mount=type=bind,from=akmods_nvidia,src=/rpms,dst=/tmp/akmods-nv-rpms \
     bash /ctx/build_files/shared/build.sh
