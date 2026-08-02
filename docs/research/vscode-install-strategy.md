@@ -1,3 +1,10 @@
+---
+date: 2026-07-16
+question: "VS Code install strategy — brew cask vs custom ~/.opt tarball"
+origin: technical-researcher
+status: complete
+---
+
 # VS Code Install Strategy
 
 **Decision (2026-07-16)**: Revert from custom `~/.opt` tarball install to
