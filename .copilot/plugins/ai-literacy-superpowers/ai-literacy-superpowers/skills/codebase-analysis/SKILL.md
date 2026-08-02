@@ -175,6 +175,7 @@ target: [directory/glob]
 lens: [analysis lens]
 status: complete | in-progress
 findings_count: N
+origin: codebase-analyst
 external_research_needed: true | false
 ---
 

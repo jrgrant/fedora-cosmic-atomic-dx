@@ -69,6 +69,13 @@
 - **Tool**: harness-enforcer
 - **Scope**: pr
 
+### Research notes require adversarial review
+
+- **Rule**: No research note may be acted upon without a research-reviewer pass — an objection record exists at `docs/research/objections/<date>-<slug>-review.md` with all dispositions resolved. Spec files that cite research notes must declare them in a `Research:` frontmatter field listing the note paths (e.g. `Research: [docs/research/2026-08-02-cosmic-keyring.md]`). The research-reviewer produces objection records with `mode: external|codebase` in their YAML frontmatter; the harness-enforcer verifies that the review mode matches the note's origin (technical-researcher notes require external mode, codebase-analyst notes require codebase mode).
+- **Enforcement**: agent
+- **Tool**: harness-enforcer
+- **Scope**: pr
+
 ### Atomic layering discipline
 
 - **Rule**: The base FCA image must remain unmodified. All changes must be applied as reproducible layers — OCI overlay images, Containerfiles, or scripted bootstrap steps. No ad-hoc manual mutation of a running system is acceptable. Every modification must be reconstructable from source on a fresh FCA install.

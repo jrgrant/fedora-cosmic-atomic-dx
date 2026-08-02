@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-08-02 — Reflection Constraints Encoded
+
+- HARNESS.md: added "Research notes require adversarial review" constraint (agent, harness-enforcer, pr scope)
+- HARNESS.md: rule text includes `Research:` frontmatter citation convention and `origin:` field for mode matching
+- skills: added `origin: technical-researcher` and `origin: codebase-analyst` to research note output formats
+- docs/research/vscode-install-strategy.md: retrofitted YAML frontmatter with `origin` field
+- Slicing record: `encode-reflection-constraints` with S1 (local build gate) and S2 (ujust collision check) filed as issues #40 and #41
+- Objection records: spec-mode (`research-review-gate.md`) and code-mode (`research-review-gate-code.md`)
+
 ## 2026-08-02 — Research Pipeline Architecture
 
 - New agent: `codebase-analyst` — internal research (workspace only, no web tools)

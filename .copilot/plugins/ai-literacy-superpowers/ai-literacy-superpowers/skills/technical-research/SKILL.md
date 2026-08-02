@@ -282,6 +282,7 @@ question: [one-line research question]
 status: complete | in-progress | abandoned
 confidence: high | medium | low
 sources_consulted: N
+origin: technical-researcher
 rounds: N
 ---
 
