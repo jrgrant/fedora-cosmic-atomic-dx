@@ -80,6 +80,17 @@
   Until registration is complete, the orchestrator runs analysis inline.
   See `reflections/active/2026-08-02-agent-not-registered.md`.
 
+- **Self-review of research is confirmation bias**: An agent reviewing its
+  own research note is re-reading files it already read with the same
+  conclusions already formed — it will not find evidence mismatches, missed
+  counterexamples, or pattern overfitting. Adversarial review REQUIRES
+  independent context (fresh dispatch, no prior knowledge of the analysis).
+  If the research-reviewer agent is not registered, dispatch Explore or
+  another subagent with the review protocol and the note file path. Never
+  run the review inline. A self-review that finds zero objections is a red
+  flag, not a clean bill of health.
+  See `reflections/active/2026-08-02-adversarial-review-circle-jerk.md`.
+
 ## ARCH_DECISIONS
 
 - **Decision**: Use git submodules for reference repos (m2os, ublue, bluefin, fca) rather than in-tree copies.
