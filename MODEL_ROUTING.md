@@ -18,6 +18,9 @@
 | tdd-agent | Balanced | Translating well-specified scenarios into test code is a structured task; a mid-tier model handles it well |
 | code-reviewer | Balanced | Applying CUPID and literate programming lenses is systematic; a mid-tier model can work through the checklist reliably |
 | integration-agent | Efficient | CHANGELOG updates, commit messages, and PR descriptions are templated tasks; a fast, cheap model is sufficient |
+| technical-researcher | Balanced | Source evaluation and synthesis requires judgment; a mid-tier model can work through the five-phase loop reliably. The research methodology constrains the task enough that flagship reasoning is not needed |
+| codebase-analyst | Balanced | Structural codebase analysis — mapping, pattern detection, dependency tracing — is systematic work with concrete evidence (file:line citations). A mid-tier model handles it well |
+| research-reviewer | Flagship | Adversarial scrutiny of research findings — detecting source misreading, unstated assumptions, and confidence inflation — is judgment-heavy, same tier as advocatus-diaboli |
 
 ## Token Budget Guidance
 
@@ -29,6 +32,9 @@
 | Code review | 4 000 | Findings should be concise; a long review is a smell |
 | CHANGELOG + commit | 2 000 | Templated task; constrain to prevent padding |
 | Orchestrator planning | 2 000 | Planning summaries should be short |
+| Technical research | 8 000 | Research notes synthesise multiple sources; the synthesis is the value, not the source list |
+| Codebase analysis | 8 000 | Analysis notes include territory maps and file:line evidence; the map is as important as the findings |
+| Research review | 6 000 | Objection records are structured and concise; each objection carries evidence, not prose |
 
 ## When to override
 

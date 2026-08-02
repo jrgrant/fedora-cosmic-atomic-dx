@@ -12,8 +12,8 @@ build:
 # Build and install (rebases your system)
 install: build
     podman save {{ image }}:{{ tag }} | sudo podman load
-    bash scripts/pin-current.sh
-    sudo rpm-ostree rebase ostree-unverified-image:containers-storage:{{ full_image }}
+    @bash scripts/pin-current.sh
+    @sudo rpm-ostree rebase ostree-unverified-image:containers-storage:{{ full_image }}@$(sudo podman image inspect {{ full_image }} --format '{{"{{.Digest}}"}}' 2>/dev/null)
     @echo "==> Reboot to apply: sudo systemctl reboot"
 
 # Run structural tests (no build required)
@@ -28,7 +28,7 @@ test-build: build
 test-all: test test-build
 
 # Run the bootstrap script (post-install user setup)
-bootstrap:
+setup:
     bash scripts/bootstrap.sh
 
 # Prune podman storage
