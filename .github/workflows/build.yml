@@ -37,10 +37,36 @@ jobs:
         run: |
           podman pull quay.io/fedora-ostree-desktops/cosmic-atomic:${{ env.FEDORA_VERSION }}
 
+      # Resolve mutable tags to content digests for reproducible builds.
+      # Uses podman image inspect (not skopeo) — podman is already pulled
+      # as a dependency, eliminating a separate tool install and avoiding
+      # a tag-resolution race between inspect and pull.
+      - name: Resolve base image digest
+        run: |
+          DIGEST=$(podman image inspect quay.io/fedora-ostree-desktops/cosmic-atomic:${{ env.FEDORA_VERSION }} --format '{{.Digest}}')
+          if [ -z "$DIGEST" ]; then echo "ERROR: base image digest is empty"; exit 1; fi
+          echo "BASE_IMAGE_DIGEST=${DIGEST}" >> $GITHUB_ENV
+
+      - name: Resolve brew image digest
+        run: |
+          podman pull ghcr.io/ublue-os/brew:latest
+          DIGEST=$(podman image inspect ghcr.io/ublue-os/brew:latest --format '{{.Digest}}')
+          if [ -z "$DIGEST" ]; then echo "ERROR: brew image digest is empty"; exit 1; fi
+          echo "BREW_IMAGE_SHA=${DIGEST}" >> $GITHUB_ENV
+
       - name: ujust recipe collision check
         run: bash scripts/check-recipe-collisions.sh
 
       - name: Build image
+        run: |
+          podman build \
+            --build-arg BREW_IMAGE_SHA="${BREW_IMAGE_SHA}" \
+            --build-arg BASE_IMAGE_DIGEST="${BASE_IMAGE_DIGEST}" \
+            --build-arg SHA_HEAD_SHORT="${GITHUB_SHA:0:7}" \
+            -t ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.FEDORA_VERSION }} \
+            -t ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.FEDORA_VERSION }}-$(date +%Y%m%d) \
+            -t ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest \
+            .
 
       - name: Structural tests
         run: bats tests/bats/us*.bats

@@ -24,18 +24,17 @@
 ### Conventions
 
 - **Naming**: lowercase-hyphenated for files and scripts; YAML configs follow the source-of-truth repo conventions (bluefin/FCA)
-- **File structure**: Root holds harness config and project output; reference repos (m2os, ublue, bluefin, fca) are git submodules — read-only
+- **File structure**: Root holds harness config and project output; reference repos (ublue, bluefin, fca) are git submodules — read-only
 - **Error handling**: Shell scripts use `set -euo pipefail`; every script returns a meaningful exit code
 - **Documentation**: Markdown with narrative preambles; every script has a header comment explaining its purpose
 
 ### Reference Repos
 
-| Submodule | Upstream | Purpose |
-| --------- | -------- | ------- |
-| `m2os/`   | m2Giles/m2os | Current OS — source of pain, diff reference for what's missing |
-| `ublue/`  | ublue-os/main | Universal Blue base — parent of bluefin, shared infrastructure |
-| `bluefin/` | ublue-os/bluefin | Bluefin — the target DX, source of truth for dev tooling |
-| `fca/`    | fedora atomic-desktops/config | Fedora COSMIC Atomic — our stable base |
+| Submodule | Upstream | Purpose | Lifecycle |
+| --------- | -------- | ------- | --------- |
+| `ublue/`  | ublue-os/main | Universal Blue base — parent of bluefin, shared infrastructure | active |
+| `bluefin/` | ublue-os/bluefin | Bluefin — the target DX, source of truth for dev tooling | active |
+| `fca/`    | fedora atomic-desktops/config | Fedora COSMIC Atomic — our stable base | stable |
 
 ---
 

@@ -34,7 +34,7 @@
 3. [ ] Watch F45 + oo7 — drop keyring patches when oo7 lands (~Oct 2026)
 4. [ ] Quarterly harness audit
 5. [x] README with install instructions
-6. [x] Submodule bump (2026-08-02): bluefin kernel pin 7.0.12, m2os digest updates
+6. [x] Submodule bump (2026-08-02): bluefin kernel pin 7.0.12, digest updates
 7. [x] Investigate akmods `${KERNEL}` tag suffix — do not adopt. Akmods uses `{flavor}-{fedora_version}` tags. `${KERNEL}` suffix is paired with bluefin's `kernel_pin` CI variable — not applicable without kernel pinning. Research note: `docs/research/2026-08-02-akmods-kernel-tag.md`
 8. [x] Backport bluefin akmods improvements — added NOTE (kernel-rpms auto-extraction) and TODO (akmods cache kernel-devel) comments to `03-install-kernel-akmods.sh`
 9. [x] Periodic submodule diff — added "Build script drift (bluefin)" GC rule (monthly, agent enforcement) to HARNESS.md

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-08-02 — Submodule Recommendations Implemented
+
+- Removed m2os git submodule — not consumed at build time, only referenced for comparison diffs; replaced with explicit document references (R1)
+- Added adaptations.yaml as a bill-of-materials for all adapted files, with source provenance, adaptation summary, and last-verified-sync date per entry (R2)
+- Build CI now resolves base and brew image tags to OCI content digests via `podman image inspect`, passes digests as build args, and guards against empty-digest propagation (R3)
+- HARNESS.md: added Lifecycle column to the submodule table so readers can distinguish build-time dependencies from reference-only repos (R4)
+- ADR: flat submodule structure — all submodules at repo root with justification for why hierarchical nesting was rejected (R5)
+- 19 Bats tests for submodule recommendations (us7), all passing
+
 ## 2026-08-02 — Reflection Constraints Encoded
 
 - HARNESS.md: added "Research notes require adversarial review" constraint (agent, harness-enforcer, pr scope)
