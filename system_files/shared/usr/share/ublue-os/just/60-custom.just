@@ -37,14 +37,21 @@ fca-bootstrap:
         "
     fi
 
-    # ---- User apps (Flatpak) ----
+    # ---- User apps ----
     echo "--- User apps ---"
-    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo 2>/dev/null || true
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo 2>/dev/null || true
+    if ! flatpak remotes 2>/dev/null | grep -q flathub; then
+        echo "  [warn] Flathub remote not available — skipping Flatpak app installs"
+    else
 
     # Google Chrome
     if ! flatpak list 2>/dev/null | grep -q com.google.Chrome; then
         echo "  [install] google-chrome (flatpak)"
-        flatpak install -y flathub com.google.Chrome 2>/dev/null || true
+        if flatpak install -y flathub com.google.Chrome 2>&1; then
+            echo "  [ok] google-chrome installed"
+        else
+            echo "  [FAIL] google-chrome install failed"
+        fi
     else
         echo "  [skip] google-chrome already installed"
     fi
@@ -52,15 +59,25 @@ fca-bootstrap:
     # Brave Browser
     if ! flatpak list 2>/dev/null | grep -q com.brave.Browser; then
         echo "  [install] brave-browser (flatpak)"
-        flatpak install -y flathub com.brave.Browser 2>/dev/null || true
+        if flatpak install -y flathub com.brave.Browser 2>&1; then
+            echo "  [ok] brave-browser installed"
+        else
+            echo "  [FAIL] brave-browser install failed"
+        fi
     else
         echo "  [skip] brave-browser already installed"
     fi
 
-    # VS Code
-    if ! flatpak list 2>/dev/null | grep -q com.visualstudio.code; then
-        echo "  [install] vscode (flatpak)"
-        flatpak install -y flathub com.visualstudio.code 2>/dev/null || true
+    fi  # end Flathub remote check
+
+    # VS Code — brew cask (proper desktop integration, no sandbox limitations)
+    if ! brew list --cask visual-studio-code-linux &>/dev/null; then
+        echo "  [install] vscode (brew cask)"
+        if brew install --cask visual-studio-code-linux; then
+            echo "  [ok] vscode installed"
+        else
+            echo "  [FAIL] vscode install failed"
+        fi
     else
         echo "  [skip] vscode already installed"
     fi
@@ -78,7 +95,7 @@ fca-info:
     echo "Kernel: $(uname -r)"
     echo "Podman: $(podman --version 2>/dev/null || echo 'not found')"
     echo "Docker: $(docker --version 2>/dev/null || echo 'not found')"
-    echo "VS Code: $(flatpak run com.visualstudio.code --version 2>/dev/null | head -1 || echo 'not installed')"
+    echo "VS Code: $(code --version 2>/dev/null | head -1 || echo 'not installed')"
     echo "Chrome: $(flatpak run com.google.Chrome --version 2>/dev/null || echo 'not installed')"
     echo "Brave: $(flatpak run com.brave.Browser --version 2>/dev/null || echo 'not installed')"
 
@@ -88,11 +105,13 @@ rebase-helper:
     echo "==> Updating brew packages..."
     brew update && brew upgrade
     echo "==> Updating flatpak..."
-    flatpak update -y 2>/dev/null || true
+    flatpak update -y
+    echo "==> Updating brew casks..."
+    brew upgrade --cask 2>/dev/null || true
     echo "==> Self-updating apps check..."
-    echo "  VS Code: auto-updates on launch"
-    echo "  Chrome: auto-updates via Google updater"
-    echo "  Brave: auto-updates via Brave updater"
+    echo "  VS Code: auto-updates via brew upgrade --cask"
+    echo "  Chrome: updated via flatpak update (above)"
+    echo "  Brave: updated via flatpak update (above)"
 
 # Rollback to previous deployment
 fca-rollback:

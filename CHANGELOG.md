@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-02 — S6: Justfile Consolidation and Browser Install Mechanism
+
+- Consolidated divergent justfiles: archived the dead rpm2cpio/~/.opt bootstrap path (`justfiles/fedora-cosmic-atomic-dx.just`) to `docs/archive/` with a deprecation header, leaving `60-custom.just` as the single active justfile (#54)
+- Switched Flatpak browser installs (Chrome, Brave) to log per-app success/failure instead of silently suppressing errors, and added Flathub remote verification before attempting installs (#54)
+- Migrated VS Code install from Flatpak to brew cask for proper desktop integration and credential persistence, and updated `fca-info` and `rebase-helper` recipes accordingly (#54)
+- 17 Bats structural tests for justfile consolidation covering archive presence, install mechanisms, error logging, keyring fix verification, and Flathub guard (#54)
+
 ## 2026-08-02 — Submodule Recommendations Implemented
 
 - Removed m2os git submodule — not consumed at build time, only referenced for comparison diffs; replaced with explicit document references (R1)
