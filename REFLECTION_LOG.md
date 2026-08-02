@@ -117,3 +117,19 @@
   - Model tiers used: flagship (100%)
   - Pipeline stages completed: N/A (manual)
   - Agent delegation: attempted codebase-analyst, failed — ran inline
+
+---
+
+- **Date**: 2026-08-02
+- **Agent**: integration-agent
+- **Task**: Integrate submodule recommendations implementation (R1-R5)
+- **Surprise**: CI build failed on pre-existing firefox test (us2-gnome-isolation test 19), unrelated to submodule changes. All 19 submodule recommendation tests passed. Main's last 3 builds also failed with the same test — confirmed pre-existing.
+- **Proposal**: none
+- **Improvement**: The CI pipeline has a pre-existing failing test on main that blocks all PRs from getting a green build. This should be addressed (separate issue) or the test should be marked as skipped until the Firefox exclusion is resolved.
+- **Signal**: failure
+- **Constraint**: none
+- **Session metadata**:
+  - Duration: unknown
+  - Model tiers used: unknown
+  - Pipeline stages completed: 5/5 (spec-writer, tdd-agent, implementer, code-reviewer, integration-agent)
+  - Agent delegation: full pipeline
