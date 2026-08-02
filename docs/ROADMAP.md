@@ -1,6 +1,6 @@
 # Roadmap: FCA Developer Experience
 
-**Updated**: 2026-07-17
+**Updated**: 2026-08-02
 **Target**: Fedora COSMIC Atomic + Bluefin developer tooling as a custom OCI image
 
 ---
@@ -34,6 +34,12 @@
 3. [ ] Watch F45 + oo7 — drop keyring patches when oo7 lands (~Oct 2026)
 4. [ ] Quarterly harness audit
 5. [x] README with install instructions
+6. [x] Submodule bump (2026-08-02): bluefin kernel pin 7.0.12, m2os digest updates
+7. [ ] Investigate akmods `${KERNEL}` tag suffix — bluefin added kernel version to akmods image tag. If akmods images become kernel-version-specific, our `03-install-kernel-akmods.sh` will need updating. External research required.
+8. [ ] Backport bluefin akmods improvements — kernel-rpms auto-extraction note, akmods cache TODO
+9. [ ] Periodic submodule diff — compare our build scripts against bluefin upstream for drift (monthly)
+10. [ ] Encode ujust collision CI check (#41)
+11. [ ] Encode local build gate (#40)
 
 ---
 

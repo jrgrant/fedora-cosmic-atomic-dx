@@ -1,0 +1,13 @@
+- **Date**: 2026-08-02
+- **Agent**: orchestrator (manual — direct collaboration)
+- **Task**: Assess impact of upstream submodule updates (bluefin kernel pin, m2os digest bumps) using codebase-analyst
+- **Surprise**: Attempted to dispatch `codebase-analyst` via subagent tool — returned "agent not found." The agent file exists at `.copilot/plugins/ai-literacy-superpowers/ai-literacy-superpowers/agents/codebase-analyst.agent.md` but is not registered in the VS Code agent dispatch system. The orchestrator's own instructions list it as a dispatchable agent, but the subagent tool only recognizes agents registered in the VS Code extensions API. The analysis had to be run inline by the orchestrator instead of being delegated. Same issue affects `technical-researcher` and `research-reviewer` — all three research pipeline agents exist as files but cannot be dispatched as subagents.
+- **Proposal**: Add to AGENTS.md GOTCHAS: "Agent files created in ai-literacy-superpowers are documentation until registered with the VS Code agent API. The subagent tool cannot dispatch them. Until registration is complete, inline analysis by the orchestrator is the fallback." Also: either register these agents with the VS Code API, or document the registration gap as a known limitation of the research pipeline.
+- **Improvement**: The research pipeline has three well-designed agents and a two-mode adversarial reviewer, but none can be dispatched. This is a documentation-vs-reality gap identical to the one the harness-auditor checks for in HARNESS.md. The pipeline's design is complete; its implementation is blocked on agent registration.
+- **Signal**: failure
+- **Constraint**: Agent files must be registered before they can appear in orchestrator dispatch instructions — add harness check that agent files in ai-literacy-superpowers/agents/ have corresponding VS Code agent registrations
+- **Session metadata**:
+  - Duration: 15 min
+  - Model tiers used: flagship (100%)
+  - Pipeline stages completed: N/A (manual)
+  - Agent delegation: attempted codebase-analyst, failed — ran inline

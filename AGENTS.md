@@ -74,6 +74,12 @@
   credential persistence. Prefer `brew install --cask visual-studio-code-linux`.
   See `docs/research/vscode-install-strategy.md`.
 
+- **Agent files ≠ registered agents**: Agent `.agent.md` files in
+  `ai-literacy-superpowers/agents/` are documentation until registered
+  with the VS Code agent API. The `runSubagent` tool cannot dispatch them.
+  Until registration is complete, the orchestrator runs analysis inline.
+  See `reflections/active/2026-08-02-agent-not-registered.md`.
+
 ## ARCH_DECISIONS
 
 - **Decision**: Use git submodules for reference repos (m2os, ublue, bluefin, fca) rather than in-tree copies.
