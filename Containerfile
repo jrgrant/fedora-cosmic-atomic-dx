@@ -23,8 +23,12 @@ ARG FEDORA_MAJOR_VERSION="44"
 ARG BREW_IMAGE="ghcr.io/ublue-os/brew:latest"
 ARG BREW_IMAGE_SHA=""
 ARG BASE_IMAGE_DIGEST=""
+ARG AKMODS_DIGEST=""
+ARG AKMODS_NVIDIA_DIGEST=""
 # Digest pins when CI provides them; fall back to tags for local builds
 FROM ${BREW_IMAGE}${BREW_IMAGE_SHA:+@${BREW_IMAGE_SHA}} AS brew
+FROM ghcr.io/ublue-os/akmods:main-${FEDORA_MAJOR_VERSION}${AKMODS_DIGEST:+@${AKMODS_DIGEST}} AS akmods
+FROM ghcr.io/ublue-os/akmods-nvidia-open:main-${FEDORA_MAJOR_VERSION}${AKMODS_NVIDIA_DIGEST:+@${AKMODS_NVIDIA_DIGEST}} AS akmods_nvidia
 FROM scratch AS ctx
 COPY /system_files /system_files
 COPY /build_files /build_files
@@ -42,6 +46,9 @@ ARG IMAGE_FLAVOR="dx"
 RUN --mount=type=cache,dst=/var/cache/libdnf5 \
     --mount=type=cache,dst=/var/cache/rpm-ostree \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=bind,from=akmods,src=/rpms/ublue-os,dst=/tmp/akmods-rpms \
+    --mount=type=bind,from=akmods,src=/kernel-rpms,dst=/tmp/kernel-rpms \
+    --mount=type=bind,from=akmods_nvidia,src=/rpms,dst=/tmp/akmods-nv-rpms \
     bash /ctx/build_files/shared/build.sh
 
 CMD ["/sbin/init"]

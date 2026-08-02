@@ -52,7 +52,6 @@ done
 OTHER_REPOS=(
     "negativo17-fedora-multimedia.repo"
     "tailscale.repo"
-    "vscode.repo"
     "docker-ce.repo"
     "fedora-cisco-openh264.repo"
     "fedora-coreos-pool.repo"

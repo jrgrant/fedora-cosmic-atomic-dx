@@ -7,6 +7,12 @@
 #
 # The repo is removed rather than disabled because validate-repos.sh fails
 # on any enabled third-party repo.
+#
+# BUS FACTOR: This COPR is maintained by a single person (adil192). If the
+# COPR is discontinued, COSMIC desktop will be stuck at Fedora 44's bundled
+# version. Mitigation: negotiate upstream inclusion in official Fedora repos.
+# See: docs/research/2026-08-02-upstream-dependency-catalog.md F2
+# TODO(fedora-45): Update COPR_REPO URL when Fedora 45 base image is adopted.
 
 set -eoux pipefail
 
@@ -18,7 +24,9 @@ curl -fsSL "$COPR_REPO" -o "$REPO_FILE"
 echo "Added COPR repo: $REPO_FILE"
 
 # Upgrade COSMIC packages from the COPR
-dnf upgrade -y cosmic-\* xdg-desktop-portal-cosmic cutecosmic\* 2>/dev/null || true
+if ! dnf upgrade -y cosmic-\* xdg-desktop-portal-cosmic cutecosmic\*; then
+    echo "WARNING: COSMIC COPR upgrade failed — COSMIC packages may be at base image versions"
+fi
 
 # Remove the repo — don't leave third-party repos enabled
 rm -f "$REPO_FILE"

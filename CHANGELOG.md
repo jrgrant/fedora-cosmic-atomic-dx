@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-02 — S1+S2+S4+S8: Akmods FROM Stages, COSMIC Bus Factor, Vendored Homebrew, Dead Repo Cleanup
+
+- Switched akmods RPM acquisition from `skopeo copy` at build time to `FROM`-based build stages with digest pins in the Containerfile, matching the upstream ublue pattern and eliminating network fetches during the install step (#55)
+- Documented bus factor risk for the COSMIC COPR (single maintainer: adil192) with upstream-negotiation mitigation notes, and fixed silent `dnf upgrade` failure that was masking COPR upgrade errors with `|| true` (#56)
+- Vendored the Homebrew installer script into the repo, switching `brew-setup` from a `curl | bash` remote fetch to a local copy, eliminating an external-network dependency at image build time (#57)
+- Removed dead `vscode.repo` from the allowed-repos list in `validate-repos.sh` — VS Code is now installed via brew cask, not an external RPM repo (#58)
+
 ## 2026-08-02 — Nightly Build Pivot
 
 - Pivoted CI from daily cron (6am UTC) to nightly (2am UTC) with a check-schedule job that skips the build when HEAD hasn't changed since the last successful run; push, PR, and dispatch events continue to build unconditionally (#62)
